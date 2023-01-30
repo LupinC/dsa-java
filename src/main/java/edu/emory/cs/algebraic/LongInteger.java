@@ -38,13 +38,12 @@ public class LongInteger extends SignedNumeral<LongInteger> implements Comparabl
      *         except for the first character that can be [+-\d].
      */
 
-    public void set(String n)
-    {
-        if(n == null)
-        {throw new NullPointerException();}
+    public void set(String n) {
+        // 'n' must not be null
+        if (n == null)
+            throw new NullPointerException();
 
-
-        //sets this.sign
+        // set this.sign
         sign = switch (n.charAt(0)) {
             case '-' -> { n = n.substring(1); yield Sign.NEGATIVE; }
             case '+' -> { n = n.substring(1); yield Sign.POSITIVE; }
@@ -55,12 +54,12 @@ public class LongInteger extends SignedNumeral<LongInteger> implements Comparabl
         digits = new byte[n.length()];
 
         for (int i = 0, j = n.length() - 1; i < n.length(); i++, j--) {
-            byte v = (byte) (n.charAt(i) - 48);
-            digits[j] = v;
+            byte v = (byte)(n.charAt(i) - 48);
             if (0 > v || v > 9) {
                 String s = String.format("%d is not a valid value", v);
                 throw new InvalidParameterException(s);
             }
+            digits[j] = v;
         }
     }
 
@@ -77,13 +76,15 @@ public class LongInteger extends SignedNumeral<LongInteger> implements Comparabl
     }
 
     public void addSameSign(LongInteger n){
+        // copy this integer to result[]
         int m = Math.max(digits.length, n.digits.length);
-        byte[] result = new byte[m+1];
+        byte[] result = new byte[m + 1];
         System.arraycopy(digits, 0, result, 0, digits.length);
 
         // add n to result
-        for (int i = 0; i < n.digits.length; i++) {
-            result[i] += n.digits[i];
+        for (int i = 0; i < m; i++) {
+            if (i < n.digits.length)
+                result[i] += n.digits[i];
             if (result[i] >= 10) {
                 result[i] -= 10;
                 result[i + 1] += 1;
@@ -92,7 +93,6 @@ public class LongInteger extends SignedNumeral<LongInteger> implements Comparabl
 
         // set this.digits
         digits = result[m] == 0 ? Arrays.copyOf(result, m) : result;
-
     }
 
     protected void addDifferentSign(LongInteger n){
