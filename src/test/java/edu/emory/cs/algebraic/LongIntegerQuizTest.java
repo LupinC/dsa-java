@@ -74,4 +74,27 @@ public class LongIntegerQuizTest {
         a.add(new LongIntegerQuiz("123"));
         assertEquals("-87531", a.toString());
     }
+
+    @Test
+    public void test11() {
+        LongInteger a = new LongIntegerQuiz("1000");
+        a.add(new LongIntegerQuiz("-999"));
+        assertEquals("1", a.toString());
+    }
+
+    @Test
+    public void test12() {
+        LongInteger a = new LongIntegerQuiz("1");
+        a.add(new LongIntegerQuiz("-"));
+        assertEquals("1", a.toString());
+    }
+
+    @Test
+    public void test13() {
+        LongInteger a = new LongIntegerQuiz("-");
+        a.add(new LongIntegerQuiz("1"));
+        assertEquals("1", a.toString());
+    }
+
+
 }
