@@ -2,9 +2,10 @@ package edu.emory.cs.queue;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,5 +56,39 @@ public class PriorityQueueTest {
         while (!queue.isEmpty()) queue.remove();
         et = System.currentTimeMillis();
         time.remove += et - st;
+    }
+
+    <T extends Comparable<T>> Time[] benchmark(AbstractPriorityQueue<T>[] queues, int size, int iter, Supplier<T> sup) {
+        Time[] times = Stream.generate(Time::new).limit(queues.length).toArray(Time[]::new);
+
+        for (int i = 0; i < iter; i++) {
+            List<T> keys = Stream.generate(sup).limit(size).collect(Collectors.toList());
+            for (int j = 0; j < queues.length; j++)
+                addRuntime(queues[j], times[j], keys);
+        }
+
+        return times;
+    }
+
+    @SafeVarargs
+    final void testRuntime(AbstractPriorityQueue<Integer>... queues) {
+        final int begin_size = 1000;
+        final int end_size = 10000;
+        final int inc = 1000;
+        final Random rand = new Random();
+
+        for (int size = begin_size; size <= end_size; size += inc) {
+            // JVM warm-up
+            benchmark(queues, size, 10, rand::nextInt);
+            // benchmark all priority queues with the same keys
+            Time[] times = benchmark(queues, size, 1000, rand::nextInt);
+
+            StringJoiner joiner = new StringJoiner("\t");
+            joiner.add(Integer.toString(size));
+            joiner.add(Arrays.stream(times).map(t -> Long.toString(t.add)).collect(Collectors.joining("\t")));
+            joiner.add("x");
+            joiner.add(Arrays.stream(times).map(t -> Long.toString(t.remove)).collect(Collectors.joining("\t")));
+            System.out.println(joiner.toString());
+        }
     }
 }

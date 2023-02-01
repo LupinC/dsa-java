@@ -11,30 +11,67 @@ public class TernaryHeapQuiz<T extends Comparable<T>> extends AbstractPriorityQu
     public TernaryHeapQuiz() {
         this(Comparator.naturalOrder());
     }
-
+    /**
+     * starts at index 0
+     * an index k -> its parent at (k-1)/3
+     * its children at 3k+1; 3k+2; 3k+3
+     * */
     public TernaryHeapQuiz(Comparator<T> priority) {
         super(priority);
         keys = new ArrayList<>();
-        // TODO: to be updated
-        keys.add(null);
 
     }
 
+    private int compare(int k1, int k2) {
+        return priority.compare(keys.get(k1), keys.get(k2));
+    }
+
+
     @Override
     public void add(T key) {
-        // TODO: to be updated
+        keys.add(key);
+        swim(size()-1);
+    }
+
+    private void swim(int k) {
+        for (; 0 < k && compare((k-1)/3, k) < 0; k = (k-1)/3)
+            Collections.swap(keys, (k-1)/3, k);
     }
 
     @Override
     public T remove() {
-        // TODO: to be updated
-        return null;
+        if (isEmpty()) return null;
+        Collections.swap(keys, 0, size()-1);
+        T max = keys.remove(size()-1);
+        sink();
+        return max;
     }
 
     @Override
     public int size() {
-        // TODO: to be updated
-        return 0;
+        return keys.size();
+    }
+
+    private void sink(){
+        for(int k = 0, i = 1; i<size(); k = i, i = 3*i+1){
+
+
+            if(i+2< size())
+            {
+                if(compare(i,i+1)<0||compare(i,i+2)<0)
+                {
+                    i++;
+                }
+            }
+
+            if (i+1 < size() && compare(i, i + 1) < 0) i++;
+
+
+
+
+            if (compare(k,i)>=0) break;
+            Collections.swap(keys,k,i);
+        }
     }
 }
 
