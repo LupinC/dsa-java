@@ -86,7 +86,6 @@ public class PriorityQueueTest {
             StringJoiner joiner = new StringJoiner("\t");
             joiner.add(Integer.toString(size));
             joiner.add(Arrays.stream(times).map(t -> Long.toString(t.add)).collect(Collectors.joining("\t")));
-            joiner.add("x");
             joiner.add(Arrays.stream(times).map(t -> Long.toString(t.remove)).collect(Collectors.joining("\t")));
             System.out.println(joiner.toString());
         }
