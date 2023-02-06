@@ -70,10 +70,15 @@ public class PriorityQueueTest {
         return times;
     }
 
+    @Test
+    public void testRuntime() {
+        testRuntime(new LazyPriorityQueue<>(), new EagerPriorityQueue<>(), new BinaryHeap<>());
+    }
+
     @SafeVarargs
     final void testRuntime(AbstractPriorityQueue<Integer>... queues) {
         final int begin_size = 1000;
-        final int end_size = 10000;
+        final int end_size = 20000;
         final int inc = 1000;
         final Random rand = new Random();
 
