@@ -20,6 +20,6 @@ public class SortQuizTest extends SortTest {
     @Test
     public void testRuntime() {
         testRuntime(new ShellSortKnuth<>(), new ShellSortQuiz<>());
-        testRuntime(new LSDRadixSort(), new MSDRadixSort());
+        testRuntime(new LSDRadixSort(), new RadixSortQuiz());
     }
 }
