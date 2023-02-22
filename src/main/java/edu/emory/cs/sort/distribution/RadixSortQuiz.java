@@ -27,10 +27,6 @@ public class RadixSortQuiz extends RadixSort {
 
         //System.out.println("after: " + a.size());
 
-/*        for (int i = 0; i< array.length; i++)
-        {
-            array[i] = a.removeFirst();
-        }*/
 
 /*        for (var i: a) {
             System.out.print(i + " ");

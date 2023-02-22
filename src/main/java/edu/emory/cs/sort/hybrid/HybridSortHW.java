@@ -69,8 +69,10 @@ public class HybridSortHW<T extends Comparable<T>> implements HybridSort<T> {
         T[] output = (T[]) new Comparable[k * n];
 
 
-        for( n = 0,  k = n+1; n < input.length -1; n++) {
-            int len = input[n].length + input[k].length;
+        {
+            n = 0;
+            k = 0;
+            int len = input[0].length + input[1].length;
 
             int indexone = 0;
             int indextwo = 0;
@@ -99,6 +101,8 @@ public class HybridSortHW<T extends Comparable<T>> implements HybridSort<T> {
                 }
             }
         }
+
+
 
 
 
