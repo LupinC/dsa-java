@@ -30,6 +30,13 @@ public class HybridSortBaseline<T extends Comparable<T>> implements HybridSort<T
         }
 
         engine.sort(output);
+
+/*        for (int i = 0; i< output.length;i++){
+            System.out.print(output[i]+" ");
+        }*/
+
+
+
         return output;
     }
 }

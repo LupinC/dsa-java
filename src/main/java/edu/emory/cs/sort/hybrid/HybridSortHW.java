@@ -1,121 +1,149 @@
 package edu.emory.cs.sort.hybrid;
 
 import edu.emory.cs.sort.AbstractSort;
-import edu.emory.cs.sort.comparison.InsertionSort;
 import edu.emory.cs.sort.divide_conquer.QuickSort;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class HybridSortHW<T extends Comparable<T>> implements HybridSort<T> {
 
+public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
 
     @Override
     @SuppressWarnings("unchecked")
     public T[] sort(T[][] input) {
+        List<T[]> rows = new ArrayList<T[]>();
 
-        // Determine the number of available processors
-        int numProcessors = Runtime.getRuntime().availableProcessors();
-
-        // Create a thread pool with the number of available processors
-        ExecutorService executor = Executors.newFixedThreadPool(numProcessors);
-
-
-        for (int i = 0; i < input.length; i++) {
-            final int row = i;
-            final AbstractSort<T> engine = new QuickSort<>();
-            executor.submit(() -> engine.sort(input[row]));
-        }
 
         for(int i = 0; i < input.length; i++){
-            int n = input[i].length;
-            if (input[i][n - 1].compareTo(input[i][0])>0){
-                final int row = i;
-                final AbstractSort<T> engine1 = new InsertionSort<>();
-                executor.submit(() -> engine1.sort(input[row]));
-            }
-            else if(input[i][n-1].compareTo(input[i][0])<0){
-                int left = 0;
-                int right = input[i].length-1;
 
-                while(left<=right){
 
-                    T temp = input[i][left];
-                    input[i][left]= input[i][right];
-                    input[i][right] = temp;
-                    left++;
-                    right--;
+            if (isAscending(input[i]))
+            {/* AbstractSort<T> engine = new InsertionSort<>();
+            engine.sort(input[i],0,input[i].length);*/
+
                 }
-
-                final int row = i;
-                final AbstractSort<T> engine2 = new InsertionSort<>();
-                executor.submit(() -> engine2.sort(input[row]));
+            else if(isDescending(input[i]))
+            {
+                //AbstractSort<T> engine = new ShellSortKnuth<>();
+                //engine.sort(input[i],0,input[i].length);
+                reverse(input[i]);
 
             }
             else
             {
-                final int row = i;
-                final AbstractSort<T> engine3 = new QuickSort<>();
-                executor.submit(() -> engine3.sort(input[row]));
+                AbstractSort<T> engine = new QuickSort<>();
+                engine.sort(input[i], 0,input[i].length);
+
             }
+
+            rows.add(input[i]);
+
         }
 
 
-        // Wait for all tasks to complete
-        executor.shutdown();
-
-        int k = input.length;
-        int n = input[0].length;
-        T[] output = (T[]) new Comparable[k * n];
+        T[] output = merge2(rows);
 
 
+/*        for (int i = 0; i< output.length;i++){
+            System.out.print(output[i]+" ");
+        }*/
+
+        return output;
+    }
+
+    public boolean isAscending(T[] row){
+        for(int i = 0; i< row.length-1;i++){
+            if(row[i].compareTo(row[i+1])>0){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public boolean isDescending(T[] row){
+        for(int i = 0; i< row.length-1;i++){
+            if(row[i].compareTo(row[i+1])<0){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public T[] merge(T[] one, T[] two) {
+
+        T[] three = (T[]) Array.newInstance(one[0].getClass(),one.length+two.length);
+        int len = three.length;
+
+        int indexone = 0;
+        int indextwo = 0;
+
+        for(int i = 0; i < len; i++)
         {
-            n = 0;
-            k = 0;
-            int len = input[0].length + input[1].length;
-
-            int indexone = 0;
-            int indextwo = 0;
-
-            for (int i = 0; i < len; i++) {
-                if (indexone < input[n].length && indextwo < input[k].length) {
-                    if (input[n][indexone].compareTo(input[k][indextwo]) <= 0) {
-                        output[i] = input[n][indexone];
-
-                        indexone++;
-                    } else {
-                        output[i] = input[k][indextwo];
-
-                        indextwo++;
-                    }
-                } else {
-                    if (indextwo < input[k].length) {
-                        output[i] = input[k][indextwo];
-                        indextwo++;
-                    }
-
-                    if (indexone < input[n].length) {
-                        output[i] = input[n][indexone];
-                        indexone++;
-                    }
+            if(indexone<one.length&&indextwo<two.length)
+            {
+                if(one[indexone].compareTo(two[indextwo])<=0)
+                {   three[i]=one[indexone];
+                    indexone++;}
+                else
+                {   three[i]=two[indextwo];
+                    indextwo++;}
+            }
+            else
+            {
+                if(indextwo<two.length){
+                    three[i]=two[indextwo];
+                    indextwo++;
+                }
+                if(indexone<one.length){
+                    three[i]=one[indexone];
+                    indexone++;
                 }
             }
         }
 
+        return three;
 
+    }
 
+    public T[] merge2(List<T[]> rows)
+    {
+        int size = rows.size();
+        if (size == 1){
+            return rows.get(0);
+        }
+        else if(size == 2){
+            return merge(rows.get(0),rows.get(1));
+        }
+        else
+        {
+            int mid = 0 + (rows.size()-0)/2;
+            List<T[]> left = rows.subList(0,mid);
+            List<T[]> right = rows.subList(mid, size);
+            T[] left2 = merge2(left);
+            T[] right2 = merge2(right);
+            return merge(left2,right2);
+        }
+    }
 
+    public void reverse(T[] row){
 
-        /*for(int i = 0; i< input.length; i++){
-            for(int j = 0; j < input[0].length;j++ )
-            {
-                System.out.print(input[i][j]+ " ");
-            }
-        }*/
+        int left = 0;
+        int right = row.length-1;
 
-        return output;
-
-
+        while(left<=right){
+            T temp = row[left];
+            row[left] = row[right];
+            row[right] = temp;
+            left++;
+            right--;
+        }
     }
 
 
