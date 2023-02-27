@@ -5,14 +5,23 @@ import edu.emory.cs.sort.divide_conquer.QuickSort;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.concurrent.*;
 
 
 public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public T[] sort(T[][] input) {
+    private final int threads = Runtime.getRuntime().availableProcessors();
+
+    public T[] sort(T[][] input){
+        if(input[0].length<230){
+            return sort2(input);
+        }
+        else{
+            return sort1(input);
+        }
+    }
+
+    public T[] sort2(T[][] input) {
         List<T[]> rows = new ArrayList<T[]>();
 
 
@@ -23,7 +32,7 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
             {/* AbstractSort<T> engine = new InsertionSort<>();
             engine.sort(input[i],0,input[i].length);*/
 
-                }
+            }
             else if(isDescending(input[i]))
             {
                 //AbstractSort<T> engine = new ShellSortKnuth<>();
@@ -43,14 +52,57 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
         }
 
 
-        T[] output = merge2(rows);
+        //T[] output = merge2(rows);
 
 
 /*        for (int i = 0; i< output.length;i++){
             System.out.print(output[i]+" ");
         }*/
 
-        return output;
+        return merge2(rows);
+    }
+
+
+    public T[] sort1(T[][] input) {
+        List<T[]> rows = new ArrayList<>();
+
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
+        List<Future<T[]>> futures = new ArrayList<>();
+
+        for (int i = 0; i < input.length; i++) {
+            int finalI = i;
+            Future<T[]> future = executor.submit(() -> {
+                if (isAscending(input[finalI])) {
+                    return input[finalI];
+                } else if (isDescending(input[finalI])) {
+                    reverse(input[finalI]);
+                } else {
+                    AbstractSort<T> engine = new QuickSort<>();
+                    engine.sort(input[finalI], 0, input[finalI].length);
+                }
+                return input[finalI];
+            });
+
+            futures.add(future);
+        }
+
+        executor.shutdown();
+
+        for (Future<T[]> future : futures) {
+            try {
+                rows.add(future.get());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //T[] output = merge2(rows);
+
+/*        for (int i = 0; i< output.length;i++){
+            System.out.print(output[i]+" ");
+        }*/
+
+        return merge2(rows);
     }
 
     public boolean isAscending(T[] row){
@@ -59,10 +111,8 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
                 return false;
             }
         }
-
         return true;
     }
-
 
     public boolean isDescending(T[] row){
         for(int i = 0; i< row.length-1;i++){
@@ -70,20 +120,15 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
                 return false;
             }
         }
-
         return true;
     }
 
-
     @SuppressWarnings("unchecked")
     public T[] merge(T[] one, T[] two) {
-
         T[] three = (T[]) Array.newInstance(one[0].getClass(),one.length+two.length);
         int len = three.length;
-
         int indexone = 0;
         int indextwo = 0;
-
         for(int i = 0; i < len; i++)
         {
             if(indexone<one.length&&indextwo<two.length)
@@ -107,36 +152,29 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
                 }
             }
         }
-
         return three;
-
     }
 
     public T[] merge2(List<T[]> rows)
     {
-        int size = rows.size();
-        if (size == 1){
-            return rows.get(0);
+        while (rows.size() > 1) {
+            List<T[]> newRows = new ArrayList<>();
+            for (int i = 0; i < rows.size(); i += 2) {
+                if (i + 1 >= rows.size()) {
+                    newRows.add(rows.get(i));
+                } else {
+                    T[] merged = merge(rows.get(i), rows.get(i + 1));
+                    newRows.add(merged);
+                }
+            }
+            rows = newRows;
         }
-        else if(size == 2){
-            return merge(rows.get(0),rows.get(1));
-        }
-        else
-        {
-            int mid = 0 + (rows.size()-0)/2;
-            List<T[]> left = rows.subList(0,mid);
-            List<T[]> right = rows.subList(mid, size);
-            T[] left2 = merge2(left);
-            T[] right2 = merge2(right);
-            return merge(left2,right2);
-        }
+        return rows.get(0);
     }
 
     public void reverse(T[] row){
-
         int left = 0;
         int right = row.length-1;
-
         while(left<=right){
             T temp = row[left];
             row[left] = row[right];
@@ -145,6 +183,4 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
             right--;
         }
     }
-
-
 }
