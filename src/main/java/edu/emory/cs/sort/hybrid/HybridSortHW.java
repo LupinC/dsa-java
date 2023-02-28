@@ -29,36 +29,20 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
 
 
             if (isAscending(input[i]))
-            {/* AbstractSort<T> engine = new InsertionSort<>();
-            engine.sort(input[i],0,input[i].length);*/
+            {
 
             }
             else if(isDescending(input[i]))
             {
-                //AbstractSort<T> engine = new ShellSortKnuth<>();
-                //engine.sort(input[i],0,input[i].length);
                 reverse(input[i]);
-
             }
             else
             {
                 AbstractSort<T> engine = new QuickSort<>();
                 engine.sort(input[i], 0,input[i].length);
-
             }
-
             rows.add(input[i]);
-
         }
-
-
-        //T[] output = merge2(rows);
-
-
-/*        for (int i = 0; i< output.length;i++){
-            System.out.print(output[i]+" ");
-        }*/
-
         return merge2(rows);
     }
 
@@ -73,7 +57,7 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
             int finalI = i;
             Future<T[]> future = executor.submit(() -> {
                 if (isAscending(input[finalI])) {
-                    return input[finalI];
+
                 } else if (isDescending(input[finalI])) {
                     reverse(input[finalI]);
                 } else {
@@ -95,13 +79,6 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
                 e.printStackTrace();
             }
         }
-
-        //T[] output = merge2(rows);
-
-/*        for (int i = 0; i< output.length;i++){
-            System.out.print(output[i]+" ");
-        }*/
-
         return merge2(rows);
     }
 

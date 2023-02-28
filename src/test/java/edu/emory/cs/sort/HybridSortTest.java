@@ -10,9 +10,6 @@ import java.util.StringJoiner;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-/**
- * @author Jinho D. Choi ({@code jinho.choi@emory.edu})
- */
 public class HybridSortTest {
     private final Random rand = new Random();
 
