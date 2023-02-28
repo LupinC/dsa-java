@@ -27,7 +27,6 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
 
         for(int i = 0; i < input.length; i++){
 
-
             if (isAscending(input[i]))
             {
 
@@ -45,7 +44,6 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
         }
         return merge2(rows);
     }
-
 
     public T[] sort1(T[][] input) {
         List<T[]> rows = new ArrayList<>();
