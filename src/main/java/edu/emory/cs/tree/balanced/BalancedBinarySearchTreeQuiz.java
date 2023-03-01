@@ -10,6 +10,7 @@ public class BalancedBinarySearchTreeQuiz<T extends Comparable<T>> extends Abstr
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void balance(BinaryNode<T> node) {
 
         BinaryNode parent = node.getParent();
@@ -21,30 +22,31 @@ public class BalancedBinarySearchTreeQuiz<T extends Comparable<T>> extends Abstr
         {
             if(uncle.getKey().compareTo(uncle.getLeftChild().getKey())>0)//uncle > cousin
             {
-                rotateRight(node);
+                rotateRight(parent);
                 rotateLeft(grandparent);
-                rotateRight(uncle);
+                rotateRight(grandparent);
             }
 
             else
             {
-                rotateRight(node);
-                rotateLeft(grandparent);
                 rotateLeft(uncle);
-                rotateRight(uncle);
+                rotateRight(parent);
+                rotateLeft(grandparent);
+                rotateRight(grandparent);
             }
         }
         else
         {
             if(uncle.getKey().compareTo(uncle.getLeftChild().getKey())>0)//uncle > cousin
             {
-                rotateLeft(grandparent);
                 rotateLeft(uncle);
+                rotateLeft(grandparent);
+                rotateRight(grandparent);
             }
             else
             {
                 rotateLeft(grandparent);
-                rotateRight(uncle);
+                rotateRight(grandparent);
             }
         }
     }
