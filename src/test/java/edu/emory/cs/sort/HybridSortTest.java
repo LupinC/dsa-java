@@ -88,7 +88,7 @@ public class HybridSortTest {
     public void testSpeed3() {
         HybridSort<Integer> gold = new HybridSortBaseline<>();
         HybridSort<Integer> mine = new HybridSortHW<>();
-        double ratio = 0.5;
+        double ratio = 0.25;
         int row, col = 100;
 
         for (row = 100; row <= 1000; row += 100) {    // for (row = 100; row <= 1000; row += 100) {
