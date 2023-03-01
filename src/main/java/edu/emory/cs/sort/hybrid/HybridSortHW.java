@@ -47,7 +47,7 @@ public class HybridSortHW <T extends Comparable<T>> implements HybridSort<T>{
     public T[] sort1(T[][] input) {
         List<T[]> rows = new ArrayList<>();
 
-        ExecutorService executor = Executors.newFixedThreadPool(1);
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
         List<Future<T[]>> futures = new ArrayList<>();
 
         for (int i = 0; i < input.length; i++) {
