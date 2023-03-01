@@ -34,6 +34,22 @@ public class HybridSortTest {
     }
 
     @Test
+    public void testRobustness2() {
+        HybridSort<String> gold = new HybridSortBaseline<>();
+        HybridSort<String> mine = new HybridSortHW<>();
+
+        String[][] input = {{"A", "B", "C", "D"}, {"H", "G", "F", "E"}, {"K", "L", "C", "M"}, {"O", "K", "Z", "T"}, {"N", "M", "V", "A"}};
+        testRobustness2(input, gold, mine);
+
+    }
+
+    void testRobustness2(String[][] input, HybridSort<String> choi, HybridSort<String> mine) {
+        String[] gold = choi.sort(copyOf2(input));
+        String[] auto = mine.sort(input);
+        assertArrayEquals(gold, auto);
+    }
+
+    @Test
     @SuppressWarnings("unchecked")
     public void testSpeed() {
         HybridSort<Integer> gold = new HybridSortBaseline<>();
@@ -42,6 +58,40 @@ public class HybridSortTest {
         int row = 100, col;
 
         for (col = 100; col <= 1000; col += 100) {    // for (row = 100; row <= 1000; row += 100) {
+            long[] time = testSpeed(row, col, ratio, gold, mine);
+            StringJoiner join = new StringJoiner("\t");
+            join.add(String.format("Row: %d, Col: %d, ratio: %4.2f", row, col, ratio));
+            for (long t : time) join.add(Long.toString(t));
+            System.out.println(join.toString());
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSpeed2() {
+        HybridSort<Integer> gold = new HybridSortBaseline<>();
+        HybridSort<Integer> mine = new HybridSortHW<>();
+        double ratio = 0.5;
+        int row = 100, col;
+
+        for (col = 100; col <= 1000; col += 100) {    // for (row = 100; row <= 1000; row += 100) {
+            long[] time = testSpeed(row, col, ratio, gold, mine);
+            StringJoiner join = new StringJoiner("\t");
+            join.add(String.format("Row: %d, Col: %d, ratio: %4.2f", row, col, ratio));
+            for (long t : time) join.add(Long.toString(t));
+            System.out.println(join.toString());
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSpeed3() {
+        HybridSort<Integer> gold = new HybridSortBaseline<>();
+        HybridSort<Integer> mine = new HybridSortHW<>();
+        double ratio = 0.5;
+        int row, col = 100;
+
+        for (row = 100; row <= 1000; row += 100) {    // for (row = 100; row <= 1000; row += 100) {
             long[] time = testSpeed(row, col, ratio, gold, mine);
             StringJoiner join = new StringJoiner("\t");
             join.add(String.format("Row: %d, Col: %d, ratio: %4.2f", row, col, ratio));
@@ -93,6 +143,15 @@ public class HybridSortTest {
         return copy;
     }
 
+    private String[][] copyOf2(String[][] input) {
+        String[][] copy = new String[input.length][];
+
+        for (int i = 0; i < input.length; i++)
+            copy[i] = Arrays.copyOf(input[i], input[i].length);
+
+        return copy;
+    }
+
     private Integer[][] randomInput(int row, int col, double ratio) {
         Integer[][] input = new Integer[row][];
 
@@ -101,6 +160,7 @@ public class HybridSortTest {
 
         return input;
     }
+
 
     private Integer[] randomArray(int size, double ratio) {
         return switch (rand.nextInt(5)) {
@@ -112,6 +172,8 @@ public class HybridSortTest {
             default -> throw new IllegalArgumentException();
         };
     }
+
+
 
     private Integer[] randomArray(int size, double ratio, Comparator<Integer> comparator) {
         Integer[] array = new Integer[size];
