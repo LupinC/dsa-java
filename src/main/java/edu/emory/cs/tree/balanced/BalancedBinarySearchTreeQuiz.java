@@ -1,6 +1,5 @@
 package edu.emory.cs.tree.balanced;
 
-import edu.emory.cs.tree.AbstractBinaryNode;
 import edu.emory.cs.tree.BinaryNode;
 
 public class BalancedBinarySearchTreeQuiz<T extends Comparable<T>> extends AbstractBalancedBinarySearchTree<T, BinaryNode<T>> {
@@ -13,43 +12,38 @@ public class BalancedBinarySearchTreeQuiz<T extends Comparable<T>> extends Abstr
     @SuppressWarnings("unchecked")
     protected void balance(BinaryNode<T> node) {
 
-        BinaryNode parent = node.getParent();
-        BinaryNode grandparent = node.getGrandParent();
-        BinaryNode uncle = node.getUncle();
+        if (node.hasParent() && node.getParent().hasParent() && node.getParent().getParent().hasBothChildren()) {
+            BinaryNode<T> parent = node.getParent();
+            BinaryNode<T> grandparent = parent.getParent();
+            BinaryNode<T> uncle = node.getUncle();
 
+            if ((!parent.hasBothChildren()) && grandparent.isRightChild(parent) && !uncle.hasBothChildren()) {
 
-        if(node.getParent().getKey().compareTo(node.getKey())>0)
-        {
-            if(uncle.getKey().compareTo(uncle.getLeftChild().getKey())>0)//uncle > cousin
-            {
-                rotateRight(parent);
-                rotateLeft(grandparent);
-                rotateRight(grandparent);
-            }
-
-            else
-            {
-                rotateLeft(uncle);
-                rotateRight(parent);
-                rotateLeft(grandparent);
-                rotateRight(grandparent);
-            }
-        }
-        else
-        {
-            if(uncle.getKey().compareTo(uncle.getLeftChild().getKey())>0)//uncle > cousin
-            {
-                rotateLeft(uncle);
-                rotateLeft(grandparent);
-                rotateRight(grandparent);
-            }
-            else
-            {
-                rotateLeft(grandparent);
-                rotateRight(grandparent);
+                if (parent.isLeftChild(node)) {//parent > node
+                    if (uncle.hasLeftChild())//uncle > cousin
+                    {
+                        rotateRight(parent);
+                        rotateLeft(grandparent);
+                        rotateRight(grandparent);
+                    } else {
+                        rotateLeft(uncle);
+                        rotateRight(parent);
+                        rotateLeft(grandparent);
+                        rotateRight(grandparent);
+                    }
+                } else {
+                    if (uncle.hasRightChild())//uncle > cousin
+                    {
+                        rotateLeft(uncle);
+                        rotateLeft(grandparent);
+                        rotateRight(grandparent);
+                    } else {
+                        rotateLeft(grandparent);
+                        rotateRight(grandparent);
+                    }
+                }
             }
         }
     }
-
-
 }
+
