@@ -2,16 +2,12 @@ package edu.emory.cs.trie.autocomplete;
 
 import edu.emory.cs.trie.TrieNode;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-/**
- * @author Jinho D. Choi ({@code jinho.choi@emory.edu})
- */
 public class AutocompleteHW extends Autocomplete<List<String>> {
 
-    List<String> candidates = new ArrayList<>();
+    List<String> candidate = new ArrayList<>();
+    List<String> child = new ArrayList<>();
 
     public AutocompleteHW(String dict_file, int max) {
         super(dict_file, max);
@@ -19,40 +15,152 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
 
     @Override
     public List<String> getCandidates(String prefix) {
+        candidate.clear();
 
         TrieNode<List<String>> node = find(prefix);
 
-        if (node == null) {
-            return candidates;
-        }
-        
-        if (node.isEndState()) {
-            candidates.add(prefix);
-        }
 
-        List<TrieNode<List<String>>> nodes = new ArrayList<>();
-        nodes.add(node);
+        if(!node.hasValue())
+        node.setValue(bfs(node));
 
-        int count = 0;
-        while (!nodes.isEmpty() && count < getMax()) {
-            TrieNode<List<String>> current = nodes.remove(nodes.size() - 1);
-            if (current.isEndState()) {
-                candidates.add(current.getValue().get(0));
-                count++;
-            }
-            nodes.addAll(current.getChildrenMap().values());
+
+        for(int i = 0; i< getMax(); i++)
+        {
+            candidate.add(node.getValue().get(i));
         }
 
-        Collections.reverse(candidates);
-        return candidates;
+
+        System.out.println(getMax());
+
+        return candidate;
     }
 
     @Override
     public void pickCandidate(String prefix, String candidate) {
-        List<String> candidates = get(prefix);
-        if (candidates != null && candidates.contains(candidate)) {
-            candidates.remove(candidate);
-            candidates.add(0, candidate);
+
+        TrieNode<List<String>> node = find(prefix);
+
+
+        if(!node.hasValue())
+        node.setValue(getCandidates(prefix));
+
+        for(int i = 0; i < node.getValue().size(); i++)
+        {
+            if(node.getValue().get(i).equals(candidate))
+            {
+                String t = node.getValue().get(i);
+                node.getValue().remove(i);
+                List<String> temp = node.getValue();
+                Collections.reverse(temp);
+                temp.add(t);
+                temp.remove(0);
+                Collections.reverse(temp);
+                node.setValue(temp);
+                return;
+            }
         }
+
+
+        List<String> temp = node.getValue();
+        Collections.reverse(temp);
+        temp.add(candidate);
+        temp.remove(0);
+        Collections.reverse(temp);
+        node.setValue(temp);
+
+
     }
+
+
+
+    public List<String> dfs(TrieNode<List<String>> node) {
+
+
+        if(node.isEndState()){
+
+            child.add(word(node));
+
+        }
+
+        for (TrieNode<List<String>> c : node.getChildrenMap().values()) {
+            dfs(c);
+        }
+
+        return child;
+    }
+
+
+
+    public List<String> bfs(TrieNode<List<String>> node) {
+
+        Queue<TrieNode<List<String>>> queue = new LinkedList<>();
+        queue.offer(node);
+
+        List<String> output = new ArrayList<>();
+
+        while (!queue.isEmpty()) {
+            TrieNode<List<String>> currNode = queue.poll();
+            if (currNode.isEndState()) {
+                output.add(word(currNode));
+            }
+            for (TrieNode<List<String>> childs : currNode.getChildrenMap().values()) {
+                queue.offer(childs);
+
+            }
+        }
+
+        return output;
+    }
+
+    public List<String> sortStrings(List<String> inputList) {
+        List<String> sortedList = new ArrayList<>(inputList);
+        Collections.sort(sortedList);
+        return sortedList;
+    }
+
+
+    public String word(TrieNode<List<String>> node){
+
+        List<Character> reversed = new ArrayList<>();
+
+        char c = node.getKey();
+
+        reversed.add(c);
+
+        while(node.getParent()!=getRoot())
+        {
+
+            node = node.getParent();
+            char d = node.getKey();
+            reversed.add(d);
+
+        }
+
+        char[] reverse = new char[reversed.size()];
+        for(int i = 0; i < reverse.length; i++)
+        {
+            reverse[i] = reversed.get(i);
+        }
+
+        for (int i = 0; i< reverse.length/2;i++)
+        {
+            char temp = reverse[i];
+            reverse[i] = reverse[reverse.length-1-i];
+            reverse[reverse.length-1-i]=temp;
+
+        }
+
+        String s = "";
+
+        for (int i = 0; i < reverse.length;i++)
+        {
+            s= s+reverse[i];
+        }
+
+        return s;
+
+    }
+
+
+
 }
