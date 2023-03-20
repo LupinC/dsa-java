@@ -22,6 +22,8 @@ public class AutocompleteTest {
 
         List<String> b = ac.getCandidates("abs");
         ac.pickCandidate("abs","absddd");
+        ac.pickCandidate("abs", "absdddd");
+        ac.pickCandidate("abs","absddda");
         ac.pickCandidate("abs","absn");
         ac.pickCandidate("abs","absorb");
         List<String> d = ac.getCandidates("abs");
@@ -31,6 +33,14 @@ public class AutocompleteTest {
             System.out.print(c+" ");
         }
 
+        System.out.println();
+
+        List<String> e = ac.getCandidates("absddd");
+
+        for (String c: e)
+        {
+            System.out.print(c + " ");
+        }
 
 
     }

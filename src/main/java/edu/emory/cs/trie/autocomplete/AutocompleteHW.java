@@ -1,5 +1,6 @@
 package edu.emory.cs.trie.autocomplete;
 
+import edu.emory.cs.trie.Trie;
 import edu.emory.cs.trie.TrieNode;
 
 import java.util.*;
@@ -19,19 +20,28 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
 
         TrieNode<List<String>> node = find(prefix);
 
-
-        if(!node.hasValue())
+        if(node.getValue()==null)
         node.setValue(bfs(node));
 
+        if(node.getValue().size()==1)
+        {
+            node.setValue(bfs(node));
 
+        }
+        if(node.getValue().size()<getMax())
+        {
+            for (int i = 0; i < node.getValue().size(); i++)
+            {
+                candidate.add(node.getValue().get(i));
+            }
+        }
+
+        else {
         for(int i = 0; i< getMax(); i++)
         {
             candidate.add(node.getValue().get(i));
-        }
-
-
-        System.out.println(getMax());
-
+        }}
+        //System.out.println(getMax());
         return candidate;
     }
 
@@ -40,9 +50,12 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
 
         TrieNode<List<String>> node = find(prefix);
 
+        List<String> empty = new ArrayList<>();
+        empty.add(candidate);
 
-        if(!node.hasValue())
-        node.setValue(getCandidates(prefix));
+        if(!node.hasValue()) {
+            node.setValue(getCandidates(prefix));
+        }
 
         for(int i = 0; i < node.getValue().size(); i++)
         {
@@ -60,6 +73,17 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
             }
         }
 
+        TrieNode<List<String>> node2 = find(candidate);
+
+        if(node2 == null)
+        {
+            put(candidate,empty);
+
+        }
+
+        TrieNode<List<String>> node3 = find(candidate);
+
+        node3.setValue(bfs(node3));
 
         List<String> temp = node.getValue();
         Collections.reverse(temp);
@@ -68,18 +92,12 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         Collections.reverse(temp);
         node.setValue(temp);
 
-
     }
-
-
 
     public List<String> dfs(TrieNode<List<String>> node) {
 
-
         if(node.isEndState()){
-
             child.add(word(node));
-
         }
 
         for (TrieNode<List<String>> c : node.getChildrenMap().values()) {
@@ -89,23 +107,24 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         return child;
     }
 
-
-
     public List<String> bfs(TrieNode<List<String>> node) {
 
         Queue<TrieNode<List<String>>> queue = new LinkedList<>();
+
+        //PriorityQueue<TrieNode<List<String>>> queue = new PriorityQueue<>(Comparator.comparing(TrieNode::getKey));
         queue.offer(node);
 
         List<String> output = new ArrayList<>();
 
         while (!queue.isEmpty()) {
             TrieNode<List<String>> currNode = queue.poll();
+
             if (currNode.isEndState()) {
                 output.add(word(currNode));
             }
+
             for (TrieNode<List<String>> childs : currNode.getChildrenMap().values()) {
                 queue.offer(childs);
-
             }
         }
 
@@ -118,7 +137,6 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         return sortedList;
     }
 
-
     public String word(TrieNode<List<String>> node){
 
         List<Character> reversed = new ArrayList<>();
@@ -129,14 +147,13 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
 
         while(node.getParent()!=getRoot())
         {
-
             node = node.getParent();
             char d = node.getKey();
             reversed.add(d);
-
         }
 
         char[] reverse = new char[reversed.size()];
+
         for(int i = 0; i < reverse.length; i++)
         {
             reverse[i] = reversed.get(i);
@@ -147,7 +164,6 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
             char temp = reverse[i];
             reverse[i] = reverse[reverse.length-1-i];
             reverse[reverse.length-1-i]=temp;
-
         }
 
         String s = "";
@@ -160,7 +176,4 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         return s;
 
     }
-
-
-
 }
