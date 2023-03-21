@@ -23,11 +23,13 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         if(node.getValue()==null)
         node.setValue(bfs(node));
 
-        if(node.getValue().size()==1)
-        {
+        if(!node.hasValue())
             node.setValue(bfs(node));
 
-        }
+        if(node.getValue().size()==1)
+            node.setValue(bfs(node));
+
+
         if(node.getValue().size()<getMax())
         {
             for (int i = 0; i < node.getValue().size(); i++)
@@ -121,6 +123,7 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
 
             if (currNode.isEndState()) {
                 output.add(word(currNode));
+                output = sortStrings(output);
             }
 
             for (TrieNode<List<String>> childs : currNode.getChildrenMap().values()) {
@@ -131,11 +134,6 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         return output;
     }
 
-    public List<String> sortStrings(List<String> inputList) {
-        List<String> sortedList = new ArrayList<>(inputList);
-        Collections.sort(sortedList);
-        return sortedList;
-    }
 
     public String word(TrieNode<List<String>> node){
 
@@ -175,5 +173,10 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
 
         return s;
 
+    }
+
+    public List<String> sortStrings(List<String> strings) {
+        strings.sort(Comparator.comparingInt(String::length).thenComparing(String::compareTo));
+        return strings;
     }
 }
