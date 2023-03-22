@@ -8,7 +8,7 @@ public class AutocompleteTest {
 
     @Test
     public void test() {
-        final String dict_file = "src/main/resources/dict2.txt";
+        final String dict_file = "src/main/resources/dict.txt";
         final int max = 20;
 
         Autocomplete<List<String>> ac = new AutocompleteHW(dict_file, max);
@@ -35,29 +35,28 @@ public class AutocompleteTest {
         ac.pickCandidate("abs","absddda");
         ac.pickCandidate("abs","absn");
         ac.pickCandidate("abs","absorb");
+        ac.pickCandidate("abs","dump");
         List<String> d = ac.getCandidates("abs");
         for(String c : d)
         {
             System.out.print(c+" ");
         }
-
         System.out.println();
 
-        List<String> e = ac.getCandidates("absddd");
 
+
+        List<String> e = ac.getCandidates("absddd");
         for (String c: e)
         {
             System.out.print(c + " ");
         }
-
         System.out.println();
 
 
         //case: both prefix and candidate does not exist
         ac.pickCandidate("m","moon");
         List<String> f = ac.getCandidates("m");
-        System.out.println(ac.find("moon").getValue().get(0));
-
+        //System.out.println(ac.find("moon").getValue().get(0));
         for (String c: f)
         {
             System.out.print(c + " ");

@@ -36,7 +36,6 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         if(node.getValue().size()==1)
             node.setValue(bfs(node));
 
-
         if(node.getValue().size()<getMax())
         {
             for (int i = 0; i < node.getValue().size(); i++)
@@ -62,7 +61,6 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         {
             if(prefix.charAt(i)!=candidate.charAt(i)){return false;}
         }
-
         return true;
 
     }
@@ -94,7 +92,6 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
             node.setValue(bfs(node));
         }
 
-
         //prefix exist, candidate exist
         for(int i = 0; i < node.getValue().size(); i++)
         {
@@ -112,7 +109,6 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
             }
         }
 
-
         //prefix exist, candidate does not
         TrieNode<List<String>> node2 = find(candidate);
 
@@ -123,39 +119,20 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
             put(candidate,empty);
         }
 
-        TrieNode<List<String>> node3 = find(candidate);
+        TrieNode<List<String>> node3 = find(prefix);
 
-        node3.setValue(bfs(node3));
-
-        List<String> temp = node.getValue();
+        List<String> temp = node3.getValue();
         Collections.reverse(temp);
         temp.add(candidate);
-        temp.remove(0);
         Collections.reverse(temp);
-        node.setValue(temp);
+        node3.setValue(temp);
 
-    }
-
-    public List<String> dfs(TrieNode<List<String>> node) {
-
-        if(node.isEndState()){
-            child.add(word(node));
-        }
-
-        for (TrieNode<List<String>> c : node.getChildrenMap().values()) {
-            dfs(c);
-        }
-
-        return child;
     }
 
     public List<String> bfs(TrieNode<List<String>> node) {
 
         Queue<TrieNode<List<String>>> queue = new LinkedList<>();
-
-        //PriorityQueue<TrieNode<List<String>>> queue = new PriorityQueue<>(Comparator.comparing(TrieNode::getKey));
         queue.offer(node);
-
         List<String> output = new ArrayList<>();
 
         while (!queue.isEmpty()) {
@@ -205,12 +182,7 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         }
 
         String s = "";
-
-        for (int i = 0; i < reverse.length;i++)
-        {
-            s= s+reverse[i];
-        }
-
+        for (int i = 0; i < reverse.length;i++) {s = s + reverse[i];}
         return s;
 
     }
