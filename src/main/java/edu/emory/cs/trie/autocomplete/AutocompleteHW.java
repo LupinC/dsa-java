@@ -14,16 +14,23 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         super(dict_file, max);
     }
 
-    @Override
     public List<String> getCandidates(String prefix) {
         candidate.clear();
+        //check if the prefix exist
+        TrieNode<List<String>> node2 = find(prefix);
+        List<String> empty = new ArrayList<>();
+        empty.add(prefix);
 
+        if(node2==null)
+            put(prefix,empty);
+
+        //pick candidate
         TrieNode<List<String>> node = find(prefix);
 
         if(node.getValue()==null)
-        node.setValue(bfs(node));
+            node.setValue(bfs(node));
 
-        if(!node.hasValue())
+        if(node.getValue().size()==0)
             node.setValue(bfs(node));
 
         if(node.getValue().size()==1)
@@ -39,26 +46,56 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         }
 
         else {
-        for(int i = 0; i< getMax(); i++)
-        {
-            candidate.add(node.getValue().get(i));
-        }}
+            for(int i = 0; i< getMax(); i++)
+            {
+                candidate.add(node.getValue().get(i));
+            }}
         //System.out.println(getMax());
         return candidate;
+    }
+
+    public boolean containPrefix(String prefix, String candidate)
+    {
+
+        if(candidate.length()<prefix.length()){return  false;}
+        for(int i = 0; i < prefix.length(); i++)
+        {
+            if(prefix.charAt(i)!=candidate.charAt(i)){return false;}
+        }
+
+        return true;
+
     }
 
     @Override
     public void pickCandidate(String prefix, String candidate) {
 
+
+        //prefix does not exist, candidate does not exist
         TrieNode<List<String>> node = find(prefix);
 
-        List<String> empty = new ArrayList<>();
-        empty.add(candidate);
-
-        if(!node.hasValue()) {
-            node.setValue(getCandidates(prefix));
+        if(node == null){
+            List<String> empty = new ArrayList<>();
+            empty.add(candidate);
+            //candidate have the prefix
+            if(containPrefix(prefix,candidate))
+            {
+                put(candidate,empty);
+            }
+            //candidate does not have prefix
+            else
+            {
+                put(prefix,empty);
+            }
         }
 
+        node = find(prefix);
+        if(!node.hasValue()) {
+            node.setValue(bfs(node));
+        }
+
+
+        //prefix exist, candidate exist
         for(int i = 0; i < node.getValue().size(); i++)
         {
             if(node.getValue().get(i).equals(candidate))
@@ -75,12 +112,15 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
             }
         }
 
+
+        //prefix exist, candidate does not
         TrieNode<List<String>> node2 = find(candidate);
 
         if(node2 == null)
         {
+            List<String> empty = new ArrayList<>();
+            empty.add(candidate);
             put(candidate,empty);
-
         }
 
         TrieNode<List<String>> node3 = find(candidate);

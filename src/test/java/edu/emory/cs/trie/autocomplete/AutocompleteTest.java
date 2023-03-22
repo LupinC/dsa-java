@@ -8,26 +8,34 @@ public class AutocompleteTest {
 
     @Test
     public void test() {
-        final String dict_file = "src/main/resources/dict.txt";
-        final int max = 10;
+        final String dict_file = "src/main/resources/dict2.txt";
+        final int max = 20;
 
-        Autocomplete<?> ac = new AutocompleteHW(dict_file, max);
+        Autocomplete<List<String>> ac = new AutocompleteHW(dict_file, max);
         List<String> a = ac.getCandidates("sh");
         for(String c : a)
         {
             System.out.print(c+" ");
         }
-
         System.out.println();
 
+
+
         List<String> b = ac.getCandidates("abs");
+        for(String c : b)
+        {
+            System.out.print(c+" ");
+        }
+        System.out.println();
+
+
+
         ac.pickCandidate("abs","absddd");
         ac.pickCandidate("abs", "absdddd");
         ac.pickCandidate("abs","absddda");
         ac.pickCandidate("abs","absn");
         ac.pickCandidate("abs","absorb");
         List<String> d = ac.getCandidates("abs");
-
         for(String c : d)
         {
             System.out.print(c+" ");
@@ -41,6 +49,20 @@ public class AutocompleteTest {
         {
             System.out.print(c + " ");
         }
+
+        System.out.println();
+
+
+        //case: both prefix and candidate does not exist
+        ac.pickCandidate("m","moon");
+        List<String> f = ac.getCandidates("m");
+        System.out.println(ac.find("moon").getValue().get(0));
+
+        for (String c: f)
+        {
+            System.out.print(c + " ");
+        }
+
 
 
     }
