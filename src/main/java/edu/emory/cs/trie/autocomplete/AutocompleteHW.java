@@ -62,7 +62,7 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
             if(prefix.charAt(i)!=candidate.charAt(i)){return false;}
         }
         return true;
-
+    //
     }
 
     @Override
