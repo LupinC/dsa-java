@@ -50,7 +50,6 @@ public class Edge implements Comparable<Edge> {
     public void addWeight(double weight) {
         this.weight += weight;
     }
-
     @Override
     public int compareTo(Edge edge) {
         double diff = weight - edge.weight;
