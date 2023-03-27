@@ -10,61 +10,86 @@ public class GraphQuiz extends Graph {
 
     /** @return the total number of atomic cycles in this graph. */
     public int numberOfCycles() {
-        int n = incoming_edges.size();
-        boolean[] visited = new boolean[n];
-        int count = 0;
+        int[] count = new int[1];
+        boolean[] visited = new boolean[size()];
+        boolean[] marked = new boolean[size()];
 
-        for (int i = 0; i < n; i++) {
+        Set<List<Integer>> cycles = new HashSet<>();
+
+        for (int i = 0; i < size(); i++) {
             if (!visited[i]) {
-                Stack<Integer> stack = new Stack<>();
+                Deque<Integer> stack = new ArrayDeque<>();
                 stack.push(i);
+                dfs(i, visited, marked, stack, count, cycles);
+            }
+        }
 
-                while (!stack.isEmpty()) {
-                    int node = stack.pop();
-                    visited[node] = true;
+        return count[0];
+    }
 
-                    for (Edge neighbor : incoming_edges.get(node)) {
-                        int src = neighbor.getSource();
-                        if (!visited[src]) {
-                            stack.push(src);
-                        } else if (visited[src] && src != node && isAnAtomicCycle(node, src)) {
-                            count++;
-                        }
+    private void dfs(int vertex, boolean[] visited, boolean[] marked, Deque<Integer> stack, int[] count,
+                     Set<List<Integer>> cycles) {
+        visited[vertex] = true;
+        marked[vertex] = true;
+
+        for (Edge edge : getOutgoingEdges().get(vertex)) {
+
+            if (!visited[edge.getTarget()]) {
+                stack.push(edge.getTarget());
+                dfs(edge.getTarget(), visited, marked, stack, count, cycles);
+            }
+            else if (marked[edge.getTarget()]) {
+
+                List<Integer> cycle = new ArrayList<>();
+
+                for (int v : stack) {
+                    cycle.add(v);
+                    if (v == edge.getTarget()) {
+                        break;
                     }
                 }
-            }
-        }
 
-        return count;
-    }
+                List<List<Integer>> Cycles = new ArrayList<>();
 
-    private boolean isAnAtomicCycle(int node1, int node2) {
-        Set<Integer> nodeSet = new HashSet<>();
-        nodeSet.add(node1);
-        nodeSet.add(node2);
-        Stack<Integer> stack = new Stack<>();
-        stack.push(node1);
+                for (int i = 0; i < cycle.size(); i++) {
+                    Cycles.add(smallestIndex(cycle));
+                }
 
-        while (!stack.isEmpty()) {
-            int node = stack.pop();
+                boolean atomic = false;
 
-            for (Edge neighbor : incoming_edges.get(node)) {
-                int src = neighbor.getSource();
-                if (nodeSet.contains(src)) {
-                    return true;
-                } else {
-                    nodeSet.add(src);
-                    stack.push(src);
+                for (int i = 0; i < Cycles.size();i++)
+                {
+                    if(cycles.contains(Cycles.get(i))){
+                        atomic = true;
+                        break;
+                    }
+                }
+
+                if (!atomic) {
+                    cycles.add(cycle);
+                    count[0]++;
                 }
             }
         }
 
-        return false;
+        marked[vertex] = false;
+        visited[vertex] = false;
+        stack.pop();
     }
 
+    public List<Integer> smallestIndex(List<Integer> cycle) {
 
+        int minIndex = 0;
 
+        for (int i = 1; i < cycle.size(); i++) {
+            if (cycle.get(i) < cycle.get(minIndex)) {
+                minIndex = i;
+            }
+        }
 
+        Collections.rotate(cycle, -minIndex);
 
+        return cycle;
+    }
 }
 
