@@ -10,6 +10,8 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
     List<String> candidate = new ArrayList<>();
     List<String> child = new ArrayList<>();
 
+
+    //getCandidates("") will work, but it will take more than 5 mins to load
     public AutocompleteHW(String dict_file, int max) {
         super(dict_file, max);
     }

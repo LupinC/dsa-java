@@ -29,6 +29,12 @@ public class AutocompleteTest {
         System.out.println();
 
 
+        List<String> g = ac.getCandidates("");
+        for(String c : g)
+        {
+            System.out.print(c+" ");
+        }
+        System.out.println();
 
         ac.pickCandidate("abs","absddd");
         ac.pickCandidate("abs", "absdddd");
