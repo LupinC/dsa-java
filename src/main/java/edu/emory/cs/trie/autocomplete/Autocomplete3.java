@@ -1,31 +1,32 @@
 package edu.emory.cs.trie.autocomplete;
 
-import edu.emory.cs.trie.Trie;
 import edu.emory.cs.trie.TrieNode;
 
 import java.util.*;
 
-public class AutocompleteHW extends Autocomplete<List<String>> {
+public class Autocomplete3 extends Autocomplete<List<String>> {
 
     List<String> candidate = new ArrayList<>();
     List<String> child = new ArrayList<>();
 
 
     //getCandidates("") will work, but it will take more than 5 mins to load
-    public AutocompleteHW(String dict_file, int max) {
+    public Autocomplete3(String dict_file, int max) {
         super(dict_file, max);
     }
 
     public List<String> getCandidates(String prefix) {
         candidate.clear();
-        //check if the prefix exist
+        prefix = prefix.trim();
 
+
+        //check if the prefix exist
         TrieNode<List<String>> node2 = find(prefix);
         List<String> empty = new ArrayList<>();
-        empty.add(prefix);
+
 
         if(node2==null)
-            put(prefix,empty);
+            return empty;
 
         //pick candidate
         TrieNode<List<String>> node = find(prefix);

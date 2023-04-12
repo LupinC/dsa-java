@@ -8,9 +8,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 
-/**
- * @author Jinho D. Choi ({@code jinho.choi@emory.edu})
- */
+
 public class MSTPrim implements MST {
     @Override
     public SpanningTree getMinimumSpanningTree(Graph graph) {

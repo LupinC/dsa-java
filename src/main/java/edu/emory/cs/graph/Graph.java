@@ -10,7 +10,7 @@ public class Graph {
      * A list of edge lists where each dimension of the outer list indicates a target vertex and
      * the inner list corresponds to the list of incoming edges to that target vertex.
      */
-    public final List<List<Edge>> incoming_edges;
+    private final List<List<Edge>> incoming_edges;
 
     public Graph(int size) {
         incoming_edges = Stream.generate(ArrayList<Edge>::new).limit(size).collect(Collectors.toList());

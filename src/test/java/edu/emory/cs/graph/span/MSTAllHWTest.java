@@ -6,13 +6,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
+/**
+ * @author Jinho D. Choi ({@code jinho.choi@emory.edu})
+ */
 public class MSTAllHWTest {
     @Test
     public void testCompleteGraphs() {
-        MSTAll gold = new MSTAllHW();
+        MSTAll gold = new MSTAllHW2();
         long st, et;
 
-        for (int i = 1; i < 10; i++) {
+        for(int i = 1; i < 10; i++) {
             st = System.currentTimeMillis();
             List<SpanningTree> list = gold.getMinimumSpanningTrees(getCompleteGraph(i));
             et = System.currentTimeMillis();
@@ -20,7 +23,20 @@ public class MSTAllHWTest {
         }
     }
 
-    //	@Test
+    public static void main(String[] args) {
+        Graph graph = new Graph(8);
+
+        for (int i = 0; i < 8 - 1; i++)
+            for (int j = i + 1; j < 8; j++)
+                graph.setUndirectedEdge(i, j, 1);
+
+        var st = System.currentTimeMillis();
+        List<SpanningTree> list = new MSTAllHW2().getMinimumSpanningTrees(graph);
+        var et = System.currentTimeMillis();
+        System.out.printf("%3d: %8d, %d\n", 8, list.size(), et - st);
+    }
+
+    @Test
     public void test() {
         List<Graph> graphs = new ArrayList<>();
         graphs.add(getGraph1a());
@@ -34,8 +50,8 @@ public class MSTAllHWTest {
         graphs.add(getGraph5a());
 
         int i, correct = 0, total = graphs.size();
-        MSTAll gold = new MSTAllHW();
-        MSTAll system = new MSTAllHW();
+        MSTAll gold = new MST3();
+        MSTAll system = new MST3();
         Graph graph;
         boolean b;
 

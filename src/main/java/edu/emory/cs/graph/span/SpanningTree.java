@@ -5,7 +5,7 @@ import edu.emory.cs.graph.Edge;
 import java.util.*;
 
 public class SpanningTree implements Comparable<SpanningTree> {
-    private final List<Edge> edges;
+    public List<Edge> edges;
     private double total_weight;
 
     public SpanningTree() {
@@ -39,7 +39,13 @@ public class SpanningTree implements Comparable<SpanningTree> {
         double diff = total_weight - tree.total_weight;
         if (diff > 0) return 1;
         else if (diff < 0) return -1;
-        else return 0;
+        else {
+                return 0;
+        }
+    }
+
+    public void remove(int i) {
+        edges.remove(i);
     }
 
     @Override
@@ -73,7 +79,43 @@ public class SpanningTree implements Comparable<SpanningTree> {
         }
 
         Arrays.sort(array);
+
+        String t = "";
+        for(int j = 0; j < array.length; j++){
+            t = t + array[j];
+        }
         return Arrays.toString(array);
+    }
+
+    public boolean containsCycle(SpanningTree tree) {
+        Set<Integer> visited = new HashSet<>();
+        for (Edge edge : tree.getEdges()) {
+            int source = edge.getSource();
+            int target = edge.getTarget();
+            if (!visited.contains(source) && hasCycle(tree, visited, source, target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasCycle(SpanningTree tree, Set<Integer> visited, int node, int parent) {
+        visited.add(node);
+        for (Edge edge : tree.getEdges()) {
+            if (edge.getSource() == node && edge.getTarget() != parent) {
+                int next = edge.getTarget();
+                if (visited.contains(next) || hasCycle(tree, visited, next, node)) {
+                    return true;
+                }
+            }
+            else if (edge.getTarget() == node && edge.getSource() != parent) {
+                int next = edge.getSource();
+                if (visited.contains(next) || hasCycle(tree, visited, next, node)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     // ========================= For MSTEdmonds.java =========================
@@ -150,4 +192,6 @@ public class SpanningTree implements Comparable<SpanningTree> {
             }
         }
     }
+
+
 }

@@ -7,7 +7,6 @@ import edu.emory.cs.set.DisjointSet;
 import java.util.PriorityQueue;
 
 
-/** @author Jinho D. Choi ({@code jinho.choi@emory.edu}) */
 public class MSTKruskal implements MST {
     @Override
     public SpanningTree getMinimumSpanningTree(Graph graph) {
