@@ -12,27 +12,6 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
     }
 
     public List<String> getCandidates(String prefix) {
-/*
-        if(prefix!="") {
-
-            boolean a = true;
-            for (int i = 0; i < prefix.length(); i++) {
-                if(prefix.charAt(i)!=' ')
-                {
-                    a = false;
-                    break;
-                }
-
-            }
-
-            if(a)
-            {
-                return List.of();
-            }
-        }
-
-*/
-
 
         prefix = prefix.trim();
 
@@ -41,8 +20,7 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
         List<String> empty = new ArrayList<>();
 
         if(node2==null)
-        {
-            return empty;}
+        {return empty;}
 
         //pick candidate
         TrieNode<List<String>> node = find(prefix);
@@ -50,11 +28,10 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
         if (!node.hasValue())
         node.setValue(bfs(node));
 
-        if(node.getValue().size()==0)
-            node.setValue(bfs(node));
-
+/*
         if(node.getValue().size()==1)
             node.setValue(bfs(node));
+*/
 
         if(node.getValue().size()<=getMax())
             return node.getValue();
@@ -63,28 +40,39 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
 
     @Override
     public void pickCandidate(String prefix, String candidate) {
+        prefix = prefix.trim();
+        candidate = candidate.trim();
 
         TrieNode<List<String>> n = find(prefix);
-
         TrieNode<List<String>> n2 = find(candidate);
 
-        //List<String> bb = new ArrayList<>();
-
-        if(n == null) {
-            put(prefix, List.of(candidate));
-            TrieNode<List<String>> dummy = find(prefix);
-            dummy.setEndState(false);
+        if(n == null&&n2 == null)
+        {
+            put(prefix,List.of(candidate));
+            TrieNode node = find(prefix);
+            node.setEndState(false);
+            put(candidate,List.of());
+            return;
         }
-            //bb.add(candidate);
+
+        if(n2!=null&& !n2.isEndState())
+        {
+            n2.setEndState(true);
+        }
+
+        if (n == null) {
+            List<String> list = List.of(candidate);
+            put(candidate, null);
+            put(prefix, list);
+            n = find(prefix);
+            n.setEndState(false);
+            return;
+        }
 
         if(n2==null|| !n2.isEndState())
         {
             put(candidate,List.of());
         }
-
-/*        if(bb.size()!=0)
-        return;*/
-
 
         //if(!n.hasValue()) {n.setValue(bfs(n));}
         n = find(prefix);
@@ -101,7 +89,6 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
         for(int i = 0; i < set.size(); i++){
             if(set.get(i).equals(candidate))
             {a.add(i); }
-
         }
 
         if(a.size()==2)
@@ -126,12 +113,10 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
             {
                 break;
             }
-
             if (currNode.isEndState()) {
                 output.add(word(currNode));
                 output = sortStrings(output);
             }
-
             for (TrieNode<List<String>> childs : currNode.getChildrenMap().values()) {
                 queue.offer(childs);
             }
