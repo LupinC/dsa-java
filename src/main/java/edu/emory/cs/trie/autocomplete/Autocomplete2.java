@@ -50,6 +50,12 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
         if (!node.hasValue())
         node.setValue(bfs(node));
 
+        if(node.getValue().size()==0)
+            node.setValue(bfs(node));
+
+        if(node.getValue().size()==1)
+            node.setValue(bfs(node));
+
         if(node.getValue().size()<=getMax())
             return node.getValue();
         return node.getValue().subList(0,getMax());
