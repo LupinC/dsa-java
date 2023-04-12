@@ -77,6 +77,12 @@ public class Autocomplete4 extends Autocomplete<List<String>> {
     @Override
     public void pickCandidate(String prefix, String candidate) {
 
+        if(prefix.equals(""))
+        {
+            TrieNode<List<String>> node = find(prefix);
+            node.setValue(bfs2(node));
+        }
+
 
         //prefix does not exist, candidate does not exist
         TrieNode<List<String>> node = find(prefix);
@@ -84,16 +90,17 @@ public class Autocomplete4 extends Autocomplete<List<String>> {
         if(node == null){
             List<String> empty = new ArrayList<>();
             empty.add(candidate);
+            put(prefix,empty);
+            TrieNode<List<String>> c = find(prefix);
+            c.setEndState(false);
+
             //candidate have the prefix
-            if(containPrefix(prefix,candidate))
+            if(!containPrefix(prefix,candidate))
             {
-                put(candidate,empty);
+                put(candidate,List.of());
             }
             //candidate does not have prefix
-            else
-            {
-                put(prefix,empty);
-            }
+
         }
 
         node = find(prefix);

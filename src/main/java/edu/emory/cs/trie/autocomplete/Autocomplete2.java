@@ -82,7 +82,8 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
 
         //if(!n.hasValue()) {n.setValue(bfs(n));}
         n = find(prefix);
-        List<String> set = new ArrayList<>(n.getValue());
+
+        List<String> set = new ArrayList<>(getCandidates(prefix));
 
         Collections.reverse(set);
         set.add(candidate);
