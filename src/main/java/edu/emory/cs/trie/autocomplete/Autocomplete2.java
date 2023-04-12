@@ -59,6 +59,7 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
             n2.setEndState(true);
         }
 
+/*
         if (n == null) {
             List<String> list = List.of(candidate);
             put(candidate, null);
@@ -67,6 +68,7 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
             n.setEndState(false);
             return;
         }
+*/
 
         if(n2==null|| !n2.isEndState())
         {
