@@ -62,14 +62,26 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
 
         TrieNode<List<String>> n2 = find(candidate);
 
+        //List<String> bb = new ArrayList<>();
+
+        if(n == null) {
+            put(prefix, List.of(candidate));
+            TrieNode<List<String>> dummy = find(prefix);
+            dummy.setEndState(false);
+        }
+            //bb.add(candidate);
+
         if(n2==null|| !n2.isEndState())
         {
             put(candidate,List.of());
         }
 
-        if(n == null) {return;}
-        if(!n.hasValue()) {n.setValue(bfs(n));}
+/*        if(bb.size()!=0)
+        return;*/
 
+
+        //if(!n.hasValue()) {n.setValue(bfs(n));}
+        n = find(prefix);
         List<String> set = new ArrayList<>(n.getValue());
 
         Collections.reverse(set);
