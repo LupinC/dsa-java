@@ -9,9 +9,9 @@ public class AutocompleteTest {
     @Test
     public void test() {
         final String dict_file = "src/main/resources/dict.txt";
-        final int max = 10;
+        final int max = 21;
 
-        Autocomplete<List<String>> ac = new Autocomplete4(dict_file, max);
+        Autocomplete<List<String>> ac = new Autocomplete2(dict_file, max);
         List<String> a = ac.getCandidates(" sh ");
         for(String c : a)
         {
