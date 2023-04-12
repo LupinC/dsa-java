@@ -217,7 +217,7 @@ public class Autocomplete4 extends Autocomplete<List<String>> {
         while (!queue.isEmpty()) {
             TrieNode<List<String>> currNode = queue.poll();
 
-            if(output.size()==getMax()+2)
+            if(output.size()==getMax())
             {
                 break;
             }

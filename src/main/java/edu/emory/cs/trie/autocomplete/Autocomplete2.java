@@ -87,7 +87,7 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
 
         Collections.reverse(set);
         set.add(candidate);
-        set.remove(0);
+        //set.remove(0);
 
         int q = 0;
         List<Integer> a = new ArrayList<>();
@@ -116,7 +116,7 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
         while (!queue.isEmpty()) {
             TrieNode<List<String>> currNode = queue.poll();
 
-            if(output.size()==getMax()+2)
+            if(output.size()==getMax())
             {
                 break;
             }
