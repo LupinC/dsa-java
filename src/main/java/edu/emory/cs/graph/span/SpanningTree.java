@@ -5,7 +5,7 @@ import edu.emory.cs.graph.Edge;
 import java.util.*;
 
 public class SpanningTree implements Comparable<SpanningTree> {
-    public List<Edge> edges;
+    private List<Edge> edges;
     private double total_weight;
 
     public SpanningTree() {
@@ -44,9 +44,6 @@ public class SpanningTree implements Comparable<SpanningTree> {
         }
     }
 
-    public void remove(int i) {
-        edges.remove(i);
-    }
 
     @Override
     public String toString() {

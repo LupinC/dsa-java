@@ -9,10 +9,10 @@ import java.util.*;
 /**
  * @author Jinho D. Choi ({@code jinho.choi@emory.edu})
  */
-public class MSTAllHWTest {
+public class MSTAllHW1Test {
     @Test
     public void testCompleteGraphs() {
-        MSTAll gold = new MSTAllHW2();
+        MSTAll gold = new MSTAllHW();
         long st, et;
 
         for(int i = 1; i < 10; i++) {
@@ -31,7 +31,7 @@ public class MSTAllHWTest {
                 graph.setUndirectedEdge(i, j, 1);
 
         var st = System.currentTimeMillis();
-        List<SpanningTree> list = new MSTAllHW2().getMinimumSpanningTrees(graph);
+        List<SpanningTree> list = new MSTAllHW().getMinimumSpanningTrees(graph);
         var et = System.currentTimeMillis();
         System.out.printf("%3d: %8d, %d\n", 8, list.size(), et - st);
     }
@@ -50,8 +50,8 @@ public class MSTAllHWTest {
         graphs.add(getGraph5a());
 
         int i, correct = 0, total = graphs.size();
-        MSTAll gold = new MST3();
-        MSTAll system = new MST3();
+        MSTAll gold = new MSTAllHW();
+        MSTAll system = new MSTAllHW();
         Graph graph;
         boolean b;
 

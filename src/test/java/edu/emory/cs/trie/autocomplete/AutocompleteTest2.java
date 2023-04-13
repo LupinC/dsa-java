@@ -17,7 +17,7 @@ public class AutocompleteTest2 {
         final String dict_file = "src/main/resources/dict.txt";
         final int max = 10;
 
-        Autocomplete<?> ac = new Autocomplete2(dict_file, max);
+        Autocomplete<?> ac = new AutocompleteHW(dict_file, max);
         Eval eval = new Eval();
         testAutocomplete(ac, eval);
     }
@@ -63,6 +63,24 @@ public class AutocompleteTest2 {
         List<String> a = ac.getCandidates(prefix);
         System.out.println(a);
 
+        prefix = "she";
+        a = ac.getCandidates(prefix);
+        System.out.println(a);
+
+        prefix = "jinho";
+        ac.pickCandidate(prefix, "jingo");
+        a = ac.getCandidates(prefix);
+        System.out.println(a);
+
+        prefix = "jinho";
+        ac.pickCandidate(prefix, "jinhochoi");
+        a = ac.getCandidates(prefix);
+        System.out.println(a);
+
+        prefix = "jinho";
+        a = ac.getCandidates(prefix);
+        System.out.println(a);
+
         prefix = "jin";
         a = ac.getCandidates(prefix);
         System.out.println(a);
@@ -75,6 +93,11 @@ public class AutocompleteTest2 {
         prefix = "nonsubs";
         ac.pickCandidate(prefix, "nonsubsidi");
         List<String> b = ac.getCandidates(prefix);
+        System.out.println(b);
+
+        prefix = "nonsubs";
+        ac.pickCandidate(prefix, "nonsubsidiz");
+        b = ac.getCandidates(prefix);
         System.out.println(b);
 
         prefix = "nonsubsid";

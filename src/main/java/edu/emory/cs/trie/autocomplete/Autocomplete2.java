@@ -48,7 +48,7 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
         if(n == null&&n2 == null)
         {
             put(prefix,List.of(candidate));
-            TrieNode node = find(prefix);
+            TrieNode<List<String>> node = find(prefix);
             node.setEndState(false);
             put(candidate,List.of());
             return;
@@ -59,16 +59,20 @@ public class Autocomplete2 extends Autocomplete<List<String>> {
             n2.setEndState(true);
         }
 
-/*
         if (n == null) {
             List<String> list = List.of(candidate);
-            put(candidate, null);
+            //put(candidate, null);//check if cand exist
+            TrieNode<List<String>> node = find(candidate);
+            if(node==null)
+                put(candidate,List.of());
+            else
+            node.setEndState(true);
+
             put(prefix, list);
             n = find(prefix);
             n.setEndState(false);
             return;
         }
-*/
 
         if(n2==null|| !n2.isEndState())
         {

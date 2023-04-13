@@ -1,5 +1,6 @@
 package edu.emory.cs.graph.span;
 
+
 import edu.emory.cs.graph.Edge;
 import edu.emory.cs.graph.Graph;
 import edu.emory.cs.set.DisjointSet;
@@ -10,17 +11,48 @@ public class MSTAllHW implements MSTAll {
 
     @Override
     public List<SpanningTree> getMinimumSpanningTrees(Graph graph) {
-        List<Edge> allEdge = new ArrayList<>(graph.getAllEdges());
-        allEdge.sort(Comparator.comparingDouble(Edge::getWeight));
+        List<Edge> allEdges = new ArrayList<>(graph.getAllEdges());
+        allEdges.sort(Comparator.comparingDouble(Edge::getWeight));
         List<SpanningTree> forest = new ArrayList<>();
-        findSpanningTrees(allEdge, graph.size(), new SpanningTree(), 0, new UnionFind(graph.size()), forest);
+
+        SpanningTree dummy = getMinimumSpanningTree(graph);
+        if(graph.size()==1)
+        {
+            forest.add(dummy);
+            return forest;
+        }
+        findSpanningTrees(allEdges, graph.size(), new SpanningTree(), 0, new UnionFind(graph.size()), forest);
+        List<String> check = new ArrayList<>();
+        for (int i = forest.size()-1; i >= 0; i--)
+        {
+                //System.out.println(forest.get(i));
+                //System.out.println();
+                //System.out.println(forest.get(i).getUndirectedSequence());
+                //System.out.println();
+
+            String t = forest.get(i).getUndirectedSequence();
+            if(!check.contains(t))
+            {
+                check.add(t);
+            }
+            else
+            {
+                forest.remove(i);
+            }
+        }
 
         return forest;
     }
 
-    private static void findSpanningTrees(List<Edge> edges, int vertex, SpanningTree currentTree, int edgeIndex, UnionFind uf, List<SpanningTree> forest) {
+    protected void remove(SpanningTree tree, int i)
+    {
+        tree.getEdges().remove(i);
+    }
 
-        if (currentTree.size() == vertex-1) {
+
+    private void findSpanningTrees(List<Edge> edges, int vertex, SpanningTree currentTree, int edgeIndex, UnionFind uf, List<SpanningTree> forest) {
+
+        if (currentTree.size() == vertex - 1 && visitedAll(currentTree, vertex)) {
             forest.add(new SpanningTree(currentTree));
             return;
         }
@@ -29,8 +61,9 @@ public class MSTAllHW implements MSTAll {
             Edge edge = edges.get(i);
             if (uf.union(edge.getSource(), edge.getTarget())) {
                 currentTree.addEdge(edge);
-                findSpanningTrees(edges, vertex, currentTree, i + 1, uf, forest);
-                currentTree.remove(currentTree.size()-1);
+                UnionFind ufNext = new UnionFind(uf);
+                findSpanningTrees(edges, vertex, currentTree, i + 1, ufNext, forest);
+                remove(currentTree,currentTree.size()-1);
                 uf.undo();
             }
         }
@@ -52,7 +85,7 @@ public class MSTAllHW implements MSTAll {
             }
         }
 
-        public UnionFind(MSTAllHW2.UnionFind uf) {
+        public UnionFind(UnionFind uf) {
             this.parent = uf.parent.clone();
             this.rank = uf.rank.clone();
             this.history = new ArrayList<>(uf.history);
@@ -103,4 +136,83 @@ public class MSTAllHW implements MSTAll {
         }
     }
 
+    public SpanningTree getMinimumSpanningTree(Graph graph) {
+        PriorityQueue<Edge> queue = new PriorityQueue<>(graph.getAllEdges());
+        DisjointSet forest = new DisjointSet(graph.size());
+        SpanningTree tree = new SpanningTree();
+
+        while (!queue.isEmpty()) {
+            Edge edge = queue.poll();
+
+            if (!forest.inSameSet(edge.getTarget(), edge.getSource())) {
+                tree.addEdge(edge);
+
+                // a spanning tree is found
+                if (tree.size() + 1 == graph.size()) break;
+                // merge forests
+                forest.union(edge.getTarget(), edge.getSource());
+            }
+        }
+
+        return tree;
+    }
+
+    private boolean visitedAll(SpanningTree currentTree, int vertices)
+    {
+        List<Integer> src = new ArrayList<>();
+        List<Integer> dest = new ArrayList<>();
+
+        for(Edge e: currentTree.getEdges()){
+            src.add(e.getSource());
+            dest.add(e.getTarget());}
+
+        List<Integer> check = new ArrayList<>(src);
+
+        for(int a: dest)
+        {
+            if(!check.contains(a))
+            {
+                check.add(a);
+            }
+        }
+
+        if(check.size()!=vertices)
+        {
+            return false;
+        }
+        else
+            return true;
+
+
+    }
+
+    private boolean check(SpanningTree currentTree, int vertices)
+    {
+        List<Integer> src = new ArrayList<>();
+        List<Integer> dest = new ArrayList<>();
+
+        for(Edge e: currentTree.getEdges()){
+            src.add(e.getSource());
+            dest.add(e.getTarget());}
+
+        List<Integer> check = new ArrayList<>(src);
+
+        for(int a: dest)
+        {
+            if(!check.contains(a))
+            {
+                check.add(a);
+            }
+        }
+
+        if(check.size()!=vertices)
+        {
+            return false;
+        }
+        else
+            return true;
+
+
+    }
 }
+

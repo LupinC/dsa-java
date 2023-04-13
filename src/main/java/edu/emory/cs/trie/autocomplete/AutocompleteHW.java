@@ -7,132 +7,103 @@ import java.util.*;
 
 public class AutocompleteHW extends Autocomplete<List<String>> {
 
-    List<String> candidate = new ArrayList<>();
-    List<String> child = new ArrayList<>();
-
-
-    //getCandidates("") will work, but it will take more than 5 mins to load
     public AutocompleteHW(String dict_file, int max) {
         super(dict_file, max);
     }
 
     public List<String> getCandidates(String prefix) {
-        candidate.clear();
-        //check if the prefix exist
 
+        prefix = prefix.trim();
+
+        //check if the prefix exist
         TrieNode<List<String>> node2 = find(prefix);
         List<String> empty = new ArrayList<>();
-        empty.add(prefix);
 
         if(node2==null)
-            put(prefix,empty);
+        {return empty;}
 
         //pick candidate
         TrieNode<List<String>> node = find(prefix);
 
-        if(node.getValue()==null)
-            node.setValue(bfs(node));
+        List<String> candidate = new ArrayList<>(bfs(node));
+        List<String> stored;
+        if(node.getValue()!=null) stored = new ArrayList<>(node.getValue());
+        else stored= new ArrayList<>();
 
-        if(node.getValue().size()==0)
-            node.setValue(bfs(node));
+        if(!stored.isEmpty()){
+            for(String s: stored){
+                for(int i = candidate.size()-1; i >= 0 ; i--){
+                    if(s.equals(candidate.get(i)))
+                    {candidate.remove(i); }
+                }}
 
-        if(node.getValue().size()==1)
-            node.setValue(bfs(node));
+            candidate.addAll(0,stored);}
 
-        if(node.getValue().size()<getMax())
-        {
-            for (int i = 0; i < node.getValue().size(); i++)
-            {
-                candidate.add(node.getValue().get(i));
-            }
-        }
-
-        else {
-            for(int i = 0; i< getMax(); i++)
-            {
-                candidate.add(node.getValue().get(i));
-            }}
-        //System.out.println(getMax());
-        return candidate;
-    }
-
-    public boolean containPrefix(String prefix, String candidate)
-    {
-
-        if(candidate.length()<prefix.length()){return  false;}
-        for(int i = 0; i < prefix.length(); i++)
-        {
-            if(prefix.charAt(i)!=candidate.charAt(i)){return false;}
-        }
-        return true;
-        //
+        if(candidate.size()<=getMax())
+            return candidate;
+        return candidate.subList(0,getMax());
     }
 
     @Override
     public void pickCandidate(String prefix, String candidate) {
+        prefix = prefix.trim();
+        candidate = candidate.trim();
 
+        TrieNode<List<String>> n = find(prefix);
+        TrieNode<List<String>> n2 = find(candidate);
 
-        //prefix does not exist, candidate does not exist
-        TrieNode<List<String>> node = find(prefix);
+        if(n == null&&n2 == null)
+        {
+            put(prefix,List.of(candidate));
+            TrieNode<List<String>> node = find(prefix);
+            node.setEndState(false);
+            put(candidate,List.of());
+            return;
+        }
 
-        if(node == null){
-            List<String> empty = new ArrayList<>();
-            empty.add(candidate);
-            //candidate have the prefix
-            if(containPrefix(prefix,candidate))
-            {
-                put(candidate,empty);
-            }
-            //candidate does not have prefix
+        if (n == null) {
+            List<String> list = List.of(candidate);
+            //put(candidate, null);//check if cand exist
+            TrieNode<List<String>> node = find(candidate);
+            if(node==null)
+                put(candidate,List.of());
             else
-            {
-                put(prefix,empty);
-            }
+                node.setEndState(true);
+
+            put(prefix, list);
+            n = find(prefix);
+            n.setEndState(false);
+            return;
         }
 
-        node = find(prefix);
-        if(!node.hasValue()) {
-            node.setValue(bfs(node));
-        }
-
-        //prefix exist, candidate exist
-        for(int i = 0; i < node.getValue().size(); i++)
+        if(n2!=null&& !n2.isEndState())
         {
-            if(node.getValue().get(i).equals(candidate))
-            {
-                String t = node.getValue().get(i);
-                node.getValue().remove(i);
-                List<String> temp = node.getValue();
-                Collections.reverse(temp);
-                temp.add(t);
-                temp.remove(0);
-                Collections.reverse(temp);
-                node.setValue(temp);
-                return;
-            }
+            n2.setEndState(true);
         }
 
-        //prefix exist, candidate does not
-        TrieNode<List<String>> node2 = find(candidate);
-
-        if(node2 == null)
+        if(n2==null|| !n2.isEndState())
         {
-            List<String> empty = new ArrayList<>();
-            empty.add(candidate);
-            put(candidate,empty);
+            put(candidate,List.of());
         }
 
-        TrieNode<List<String>> node3 = find(prefix);
-
-        List<String> temp = node3.getValue();
-        Collections.reverse(temp);
-        temp.add(candidate);
-        Collections.reverse(temp);
-        node3.setValue(temp);
-
+        n = find(prefix);
+        List<String> set;
+        if(n.getValue()==null)
+            set = new ArrayList<>();
+        else
+            set = new ArrayList<>(n.getValue());
+        Collections.reverse(set);
+        set.add(candidate);
+        Collections.reverse(set);
+        n.setValue(set);
     }
 
     public List<String> bfs(TrieNode<List<String>> node) {
+
+        int count = 0;
+
+        if(node.getValue()!=null)
+        {count = node.getValue().size();}
 
         Queue<TrieNode<List<String>>> queue = new LinkedList<>();
         queue.offer(node);
@@ -141,11 +112,14 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         while (!queue.isEmpty()) {
             TrieNode<List<String>> currNode = queue.poll();
 
+            if(output.size()==getMax()+count)
+            {
+                break;
+            }
             if (currNode.isEndState()) {
                 output.add(word(currNode));
                 output = sortStrings(output);
             }
-
             for (TrieNode<List<String>> childs : currNode.getChildrenMap().values()) {
                 queue.offer(childs);
             }
