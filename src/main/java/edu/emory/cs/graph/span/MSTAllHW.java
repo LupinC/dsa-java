@@ -185,34 +185,5 @@ public class MSTAllHW implements MSTAll {
 
 
     }
-
-    private boolean check(SpanningTree currentTree, int vertices)
-    {
-        List<Integer> src = new ArrayList<>();
-        List<Integer> dest = new ArrayList<>();
-
-        for(Edge e: currentTree.getEdges()){
-            src.add(e.getSource());
-            dest.add(e.getTarget());}
-
-        List<Integer> check = new ArrayList<>(src);
-
-        for(int a: dest)
-        {
-            if(!check.contains(a))
-            {
-                check.add(a);
-            }
-        }
-
-        if(check.size()!=vertices)
-        {
-            return false;
-        }
-        else
-            return true;
-
-
-    }
 }
 

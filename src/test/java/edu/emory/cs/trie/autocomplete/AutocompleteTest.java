@@ -11,7 +11,7 @@ public class AutocompleteTest {
         final String dict_file = "src/main/resources/dict.txt";
         final int max = 21;
 
-        Autocomplete<List<String>> ac = new Autocomplete2(dict_file, max);
+        Autocomplete<List<String>> ac = new AutocompleteHW(dict_file, max);
         List<String> a = ac.getCandidates(" sh ");
         for(String c : a)
         {

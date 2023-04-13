@@ -63,7 +63,7 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
 
         if (n == null) {
             List<String> list = List.of(candidate);
-            //put(candidate, null);//check if cand exist
+            //check if cand exist
             TrieNode<List<String>> node = find(candidate);
             if(node==null)
                 put(candidate,List.of());

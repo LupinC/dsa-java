@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * @author Jinho D. Choi ({@code jinho.choi@emory.edu})
  */
-public class MSTAllHW1Test {
+public class MSTAllHWTest {
     @Test
     public void testCompleteGraphs() {
         MSTAll gold = new MSTAllHW();
