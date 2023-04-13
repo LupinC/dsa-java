@@ -65,6 +65,7 @@ public class MSTAllHW implements MSTAll {
                 findSpanningTrees(edges, vertex, currentTree, i + 1, ufNext, forest);
                 remove(currentTree,currentTree.size()-1);
                 uf.undo();
+
             }
         }
     }
