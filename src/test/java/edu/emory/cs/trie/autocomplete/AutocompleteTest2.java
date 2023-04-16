@@ -91,16 +91,15 @@ public class AutocompleteTest2 {
         System.out.println(a);
 
         prefix = "nonsubs";
-        ac.pickCandidate(prefix, "nonsubsidi");
+        ac.pickCandidate(prefix, "nonsubsidz");
         List<String> b = ac.getCandidates(prefix);
         System.out.println(b);
 
-        prefix = "nonsubs";
-        ac.pickCandidate(prefix, "nonsubsidiz");
+        prefix = "nonsubsid";
         b = ac.getCandidates(prefix);
         System.out.println(b);
 
-        prefix = "nonsubsid";
+        prefix = "_jinho";
         b = ac.getCandidates(prefix);
         System.out.println(b);
 

@@ -15,25 +15,24 @@ public class MSTAllHWTest {
         MSTAll gold = new MSTAllHW();
         long st, et;
 
-        for(int i = 1; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             st = System.currentTimeMillis();
             List<SpanningTree> list = gold.getMinimumSpanningTrees(getCompleteGraph(i));
             et = System.currentTimeMillis();
             System.out.printf("%3d: %8d, %d\n", i, list.size(), et - st);
         }
+
     }
 
     public static void main(String[] args) {
-        Graph graph = new Graph(8);
+        MSTAll gold = new MSTAllHW();
+        long st, et;
 
-        for (int i = 0; i < 8 - 1; i++)
-            for (int j = i + 1; j < 8; j++)
-                graph.setUndirectedEdge(i, j, 1);
-
-        var st = System.currentTimeMillis();
-        List<SpanningTree> list = new MSTAllHW().getMinimumSpanningTrees(graph);
-        var et = System.currentTimeMillis();
-        System.out.printf("%3d: %8d, %d\n", 8, list.size(), et - st);
+        int i = 4;
+        st = System.currentTimeMillis();
+        List<SpanningTree> list = gold.getMinimumSpanningTrees(getCompleteGraph(i));
+        et = System.currentTimeMillis();
+        System.out.printf("%3d: %8d, %d\n", i, list.size(), et - st);
     }
 
     @Test
@@ -188,7 +187,7 @@ public class MSTAllHWTest {
         return graph;
     }
 
-    Graph getCompleteGraph(int V) {
+    static Graph getCompleteGraph(int V) {
         Graph graph = new Graph(V);
 
         for (int i = 0; i < V - 1; i++)

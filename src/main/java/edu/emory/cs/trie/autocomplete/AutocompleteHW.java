@@ -168,4 +168,22 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         strings.sort(Comparator.comparingInt(String::length).thenComparing(String::compareTo));
         return strings;
     }
+
+    public static String transformToLetters(String input) {
+        // Initialize an empty string to store the transformed output
+        String output = "";
+
+        // Loop through each character in the input string
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            // If the character is a letter, add it to the output string
+            if (Character.isLetter(c)) {
+                output += c;
+            }
+        }
+
+        // Return the transformed output string
+        return output;
+    }
 }
