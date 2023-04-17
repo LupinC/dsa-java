@@ -113,7 +113,7 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
         while (!queue.isEmpty()) {
             TrieNode<List<String>> currNode = queue.poll();
 
-            if(output.size()==getMax()+count+2)
+            if(output.size()==getMax()+count+4)
             {
                 break;
             }
