@@ -47,6 +47,7 @@ public class MSTAllHWTest {
         graphs.add(getGraph4b());
         graphs.add(getGraph4c());
         graphs.add(getGraph5a());
+        graphs.add(getInterestingGraph());
 
         int i, correct = 0, total = graphs.size();
         MSTAll gold = new MSTAllHW();
@@ -69,6 +70,11 @@ public class MSTAllHWTest {
         }
 
         System.out.printf("Score: %d/%d\n", correct, total);
+    }
+
+    Graph getInterestingGraph(){
+
+        return getCompleteGraph(15);
     }
 
     Graph getGraph1a() {
