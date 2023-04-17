@@ -14,6 +14,7 @@ public class AutocompleteHW extends Autocomplete<List<String>> {
     public List<String> getCandidates(String prefix) {
 
         prefix = prefix.trim();
+        prefix = transformToLetters(prefix);
 
         //check if the prefix exist
         TrieNode<List<String>> node2 = find(prefix);
