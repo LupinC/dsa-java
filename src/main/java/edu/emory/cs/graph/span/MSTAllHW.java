@@ -86,18 +86,15 @@ public class MSTAllHW implements MSTAll {
         {
             Edge edge = graph.getAllEdges().get(i);
             weight = weight + edge.getWeight();
-
         }
         return weight / (graph.size() - 1) == graph.size();
     }
 
     private boolean visitedAll(SpanningTree currentTree, int vertices) {
         HashSet<Integer> src = new HashSet<>();
-        HashSet<Integer> dest = new HashSet<>();
 
         for (Edge e : currentTree.getEdges()) {
             src.add(e.getSource());
-
             src.add(e.getTarget());
         }
 
@@ -169,20 +166,20 @@ public class MSTAllHW implements MSTAll {
             degree[prufer[i]]++;
         }
 
-        int[] ptr = new int[n+1];
+        int[] pointer = new int[n+1];
         for (int i = 1; i <= n; i++)
         {
-            ptr[i] = 1;
+            pointer[i] = 1;
         }
 
         SpanningTree tree = new SpanningTree();
         for (int i = 0; i < n-2; i++) {
             int v = prufer[i];
             int u = 0;
-            for (int j = ptr[v]; j <= n; j++) {
+            for (int j = pointer[v]; j <= n; j++) {
                 if (degree[j] == 0) {
                     u = j;
-                    ptr[v] = j+1;
+                    pointer[v] = j+1;
                     break;
                 }
             }
@@ -194,10 +191,10 @@ public class MSTAllHW implements MSTAll {
         for (int i = 1; i <= n; i++) {
             if (degree[i] == 0) {
                 int u = 0;
-                for (int j = ptr[i]; j <= n; j++) {
+                for (int j = pointer[i]; j <= n; j++) {
                     if (degree[j] == 0) {
                         u = j;
-                        ptr[i] = j+1;
+                        pointer[i] = j+1;
                     }
                 }
                 degree[i]--;
@@ -215,14 +212,14 @@ public class MSTAllHW implements MSTAll {
 
     static class UnionSet {
         int[] parent;
-        int[] rank;
+        int[] aux;
         List<int[]> history;
 
         public UnionSet(int size) {
             parent = new int[size];
-            rank = new int[size];
+            aux = new int[size];
             history = new ArrayList<>();
-            Arrays.fill(rank, 1);
+            Arrays.fill(aux, 1);
 
             for (int i = 0; i < size; i++) {
                 parent[i] = i;
@@ -231,7 +228,7 @@ public class MSTAllHW implements MSTAll {
 
         public UnionSet(UnionSet us) {
             this.parent = us.parent.clone();
-            this.rank = us.rank.clone();
+            this.aux = us.aux.clone();
             this.history = new ArrayList<>(us.history);
         }
 
@@ -243,23 +240,28 @@ public class MSTAllHW implements MSTAll {
         }
 
         public boolean union(int x, int y) {
-            int rootX = find(x);
-            int rootY = find(y);
+            int rootx = find(x);
+            int rooty = find(y);
 
-            if (rootX == rootY) {
+            if (rootx == rooty) {
                 return false;
             }
 
-            if (rank[rootX] > rank[rootY]) {
-                parent[rootY] = rootX;
-                history.add(new int[] { rootY, rootX });
-            } else if (rank[rootX] < rank[rootY]) {
-                parent[rootX] = rootY;
-                history.add(new int[] { rootX, rootY });
-            } else {
-                parent[rootY] = rootX;
-                rank[rootX]++;
-                history.add(new int[] { rootY, rootX });
+            if (aux[rootx] > aux[rooty])
+            {
+                parent[rooty] = rootx;
+                history.add(new int[] { rooty, rootx });
+            }
+            else if (aux[rootx] < aux[rooty])
+            {
+                parent[rootx] = rooty;
+                history.add(new int[] { rootx, rooty });
+            }
+            else
+            {
+                parent[rooty] = rootx;
+                aux[rootx]++;
+                history.add(new int[] { rooty, rootx });
             }
 
             return true;
@@ -273,8 +275,8 @@ public class MSTAllHW implements MSTAll {
 
                 parent[x] = x;
 
-                if (rank[x] == rank[y]) {
-                    rank[y]--;
+                if (aux[x] == aux[y]) {
+                    aux[y]--;
                 }
             }
         }
