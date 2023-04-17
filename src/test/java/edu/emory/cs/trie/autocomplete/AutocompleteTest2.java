@@ -15,7 +15,7 @@ public class AutocompleteTest2 {
     @Test
     public void test() {
         final String dict_file = "src/main/resources/dict.txt";
-        final int max = 10;
+        final int max = 20;
 
         Autocomplete<?> ac = new AutocompleteHW(dict_file, max);
         Eval eval = new Eval();

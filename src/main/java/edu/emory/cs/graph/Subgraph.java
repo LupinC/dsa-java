@@ -54,4 +54,17 @@ public class Subgraph {
     public boolean contains(int vertex) {
         return vertices.contains(vertex);
     }
+
+    public String toString() {
+        StringBuilder build = new StringBuilder();
+
+        for (int i = 0; i < edges.size(); i++) {
+            build.append(i);
+            build.append(" <- ");
+            build.append(edges.get(i).toString());
+            build.append("\n");
+        }
+
+        return build.toString();
+    }
 }
