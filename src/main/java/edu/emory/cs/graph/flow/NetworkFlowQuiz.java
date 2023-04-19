@@ -6,7 +6,6 @@ import edu.emory.cs.graph.Subgraph;
 
 import java.util.*;
 
-/** @author Jinho D. Choi */
 public class NetworkFlowQuiz {
     /**
      * Using depth-first traverse.
@@ -21,7 +20,7 @@ public class NetworkFlowQuiz {
         Set<Integer> visited = new HashSet<>();
         visited.add(source);
         getAugmentingPathsHelper(graph, augmentingPaths, subgraph, visited, source, target);
-        return augmentingPaths;
+        return RemoveDup(augmentingPaths);
     }
 
     private void getAugmentingPathsHelper(Graph graph, Set<Subgraph> augmentingPaths, Subgraph subgraph, Set<Integer> visited, int current, int target) {
@@ -39,6 +38,38 @@ public class NetworkFlowQuiz {
                 visited.remove(edge.getTarget());
             }
         }
+    }
+
+    protected Set<Subgraph> RemoveDup(Set<Subgraph> aug)
+    {
+        Set<Subgraph> result = new HashSet<>();
+        HashSet<String> res2 = new HashSet<>();
+
+        for (Subgraph s: aug)
+        {
+            List<Edge> allEdges = new ArrayList<>(s.getEdges());
+
+            for(int i = allEdges.size()-1; i>0; i--)
+            {
+                if(allEdges.get(i).getSource()!=allEdges.get(i-1).getTarget())
+                    allEdges.remove(i-1);
+            }
+
+            Subgraph a = new Subgraph();
+
+            for(Edge e: allEdges)
+            {
+                a.addEdge(e);
+            }
+
+            if(!res2.contains(a.toString()))
+            {
+                res2.add(a.toString());
+                result.add(a);
+            }
+        }
+
+        return result;
     }
 
 

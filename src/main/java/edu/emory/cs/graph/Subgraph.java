@@ -56,15 +56,15 @@ public class Subgraph {
     }
 
     public String toString() {
+
         StringBuilder build = new StringBuilder();
 
-        for (int i = 0; i < edges.size(); i++) {
-            build.append(i);
-            build.append(" <- ");
-            build.append(edges.get(i).toString());
-            build.append("\n");
-        }
+        for (Edge edge : edges)
+            build.append(String.format("\n%d <- %d : %f", edge.getTarget(), edge.getSource(), edge.getWeight()));
 
-        return build.toString();
+        System.out.println();
+        return build.length() > 0 ? build.substring(1) : "";
+
+
     }
 }

@@ -7,18 +7,20 @@ import edu.emory.cs.graph.Subgraph;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class NetworkFlowQuizExtraTest {
     public static void main(String[] args) {
 
 
         Graph graph = new Graph(6);
-        graph.setUndirectedEdge(0, 1, 2);
-        graph.setUndirectedEdge(0, 2, 1);
-        graph.setUndirectedEdge(1, 3, 3);
-        graph.setUndirectedEdge(2, 3, 1);
-        graph.setUndirectedEdge(2, 4, 4);
-        graph.setUndirectedEdge(3, 5, 2);
-        graph.setUndirectedEdge(4, 5, 2);
+        graph.setDirectedEdge(0, 1, 2);
+        graph.setDirectedEdge(0, 2, 1);
+        graph.setDirectedEdge(1, 3, 3);
+        graph.setDirectedEdge(2, 3, 1);
+        graph.setDirectedEdge(2, 4, 4);
+        graph.setDirectedEdge(3, 5, 2);
+        graph.setDirectedEdge(4, 5, 2);
 
         NetworkFlowQuizExtra maxFlow = new NetworkFlowQuizExtra();
         Set<Subgraph> augmentingPaths = maxFlow.getAugmentingPaths(graph, 0, 5);

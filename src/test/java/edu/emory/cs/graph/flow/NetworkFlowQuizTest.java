@@ -14,7 +14,6 @@ public class NetworkFlowQuizTest {
 
     public static void main(String[] args) {
 
-
         Graph graph = new Graph(6);
         graph.setDirectedEdge(0, 1, 2);
         graph.setDirectedEdge(0, 2, 1);
@@ -26,29 +25,60 @@ public class NetworkFlowQuizTest {
 
         NetworkFlowQuiz maxFlow = new NetworkFlowQuiz();
         Set<Subgraph> augmentingPaths = maxFlow.getAugmentingPaths(graph, 0, 5);
+        Set<String> actualPaths = new HashSet<>();
+        for(var s : augmentingPaths)
+        {
+            actualPaths.add(s.toString());
+        }
 
         Set<Subgraph> expectedPaths = new HashSet<>();
-        Subgraph path1 = new Subgraph();
-        path1.addEdge(new Edge(0, 1, 2));
-        path1.addEdge(new Edge(1, 3, 3));
-        path1.addEdge(new Edge(3, 5, 2));
-        expectedPaths.add(path1);
+        {
+            Subgraph path1 = new Subgraph();
+            path1.addEdge(new Edge(0, 1, 2));
+            path1.addEdge(new Edge(1, 3, 3));
+            path1.addEdge(new Edge(3, 5, 2));
+            expectedPaths.add(path1);
 
-        Subgraph path2 = new Subgraph();
-        path2.addEdge(new Edge(0, 2, 1));
-        path2.addEdge(new Edge(2, 3, 1));
-        path2.addEdge(new Edge(3, 5, 2));
-        expectedPaths.add(path2);
+            Subgraph path2 = new Subgraph();
+            path2.addEdge(new Edge(0, 2, 1));
+            path2.addEdge(new Edge(2, 3, 1));
+            path2.addEdge(new Edge(3, 5, 2));
+            expectedPaths.add(path2);
 
-        Subgraph path3 = new Subgraph();
-        path3.addEdge(new Edge(0, 2, 1));
-        path3.addEdge(new Edge(2, 4, 4));
-        path3.addEdge(new Edge(4, 5, 2));
-        expectedPaths.add(path3);
+            Subgraph path3 = new Subgraph();
+            path3.addEdge(new Edge(0, 2, 1));
+            path3.addEdge(new Edge(2, 4, 4));
+            path3.addEdge(new Edge(4, 5, 2));
+            expectedPaths.add(path3);
+        }
 
-        //assertEquals(expectedPaths, augmentingPaths);
+        Set<Subgraph> expectedPaths2 = new HashSet<>();
+        {
+            Subgraph path1 = new Subgraph();
+            path1.addEdge(new Edge(0, 1, 2));
+            path1.addEdge(new Edge(1, 3, 3));
+            path1.addEdge(new Edge(3, 5, 2));
+            expectedPaths2.add(path1);
+
+            Subgraph path2 = new Subgraph();
+            path2.addEdge(new Edge(0, 2, 1));
+            path2.addEdge(new Edge(2, 3, 1));
+            path2.addEdge(new Edge(3, 5, 2));
+            expectedPaths2.add(path2);
+
+            Subgraph path3 = new Subgraph();
+            path3.addEdge(new Edge(0, 2, 1));
+            path3.addEdge(new Edge(2, 4, 4));
+            path3.addEdge(new Edge(4, 5, 2));
+            expectedPaths2.add(path3);
+        }
+
+        assertEquals(expectedPaths2, expectedPaths);
         for(Subgraph s: augmentingPaths)
         System.out.println(s);
+
+/*        for (Subgraph s: expectedPaths)
+            System.out.println(s);*/
     }
 
 }
