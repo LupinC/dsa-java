@@ -18,22 +18,23 @@ public class NetworkFlowQuiz {
         Set<Subgraph> augmentingPaths = new HashSet<>();
         Subgraph subgraph = new Subgraph();
         Set<Integer> visited = new HashSet<>();
+        MaxFlow mf = new MaxFlow(graph);
         visited.add(source);
-        getAugmentingPathsHelper(graph, augmentingPaths, subgraph, visited, source, target);
+        getAugmentingPathsHelper(graph, mf, augmentingPaths, subgraph, visited, source, target);
         return RemoveDup(augmentingPaths);
     }
 
-    private void getAugmentingPathsHelper(Graph graph, Set<Subgraph> augmentingPaths, Subgraph subgraph, Set<Integer> visited, int current, int target) {
+    private void getAugmentingPathsHelper(Graph graph, MaxFlow mf, Set<Subgraph> augmentingPaths, Subgraph subgraph, Set<Integer> visited, int current, int target) {
         if (current == target) {
             augmentingPaths.add(new Subgraph(subgraph));
         } else {
             for (Edge edge : graph.getOutgoingEdges().get(current)) {
-                if (visited.contains(edge.getTarget()) || edge.getWeight() == 0) {
+                if (visited.contains(edge.getTarget()) || mf.getResidual(edge)<0) {
                     continue;
                 }
                 subgraph.addEdge(edge);
                 visited.add(edge.getTarget());
-                getAugmentingPathsHelper(graph, augmentingPaths, subgraph, visited, edge.getTarget(), target);
+                getAugmentingPathsHelper(graph, mf, augmentingPaths, subgraph, visited, edge.getTarget(), target);
                 subgraph.getEdges().remove(edge);
                 visited.remove(edge.getTarget());
             }
