@@ -40,9 +40,7 @@ public class NetworkFlowQuizExtra {
                 }
             }
         }
-
         return RemoveDup(augmentingPaths);
-
     }
 
     protected Set<Subgraph> RemoveDup(Set<Subgraph> aug)
