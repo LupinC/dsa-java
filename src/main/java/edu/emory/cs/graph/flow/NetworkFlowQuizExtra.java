@@ -7,7 +7,6 @@ import edu.emory.cs.set.DisjointSet;
 
 import java.util.*;
 
-/** @author Jinho D. Choi */
 public class NetworkFlowQuizExtra {
     /**
      * Using breadth-first traverse.
@@ -50,47 +49,22 @@ public class NetworkFlowQuizExtra {
     {
         Set<Subgraph> result = new HashSet<>();
         HashSet<String> res2 = new HashSet<>();
-
-        for (Subgraph s: aug)
-        {
+        for (Subgraph s: aug) {
             List<Edge> allEdges = new ArrayList<>(s.getEdges());
-
-            for(int i = allEdges.size()-1; i>0; i--)
-            {
+            for(int i = allEdges.size()-1; i>0; i--) {
                 if(allEdges.get(i).getSource()!=allEdges.get(i-1).getTarget())
                     allEdges.remove(i-1);
             }
-
             Subgraph a = new Subgraph();
-
-            for(Edge e: allEdges)
-            {
+            for(Edge e: allEdges) {
                 a.addEdge(e);
             }
-
-            if(!res2.contains(a.toString()))
-            {
+            if(!res2.contains(a.toString())) {
                 res2.add(a.toString());
                 result.add(a);
             }
         }
-
         return result;
-    }
-
-    protected void lastElement(Set<Integer> visited){
-        Iterator<Integer> iterator = visited.iterator();
-
-        // initialize a variable to hold the last added element
-        Integer lastElement = null;
-
-        // iterate over the HashSet to find the last element
-        while (iterator.hasNext()) {
-            lastElement = iterator.next();
-        }
-
-        // remove the last element from the HashSet
-        visited.remove(lastElement);
     }
 
     public static void main(String[] args) {

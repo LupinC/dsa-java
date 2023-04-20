@@ -84,16 +84,15 @@ public class NetworkFlowQuizTest {
 
         public static void main(String[] args) {
             Graph graph = new Graph(6);
-            graph.setDirectedEdge(0, 1, 16);
-            graph.setDirectedEdge(0, 2, 13);
-            graph.setDirectedEdge(1, 2, 10);
-            graph.setDirectedEdge(2, 1, 4);
-            graph.setDirectedEdge(1, 3, 12);
-            graph.setDirectedEdge(2, 4, 14);
-            graph.setDirectedEdge(3, 2, 9);
-            graph.setDirectedEdge(3, 5, 20);
-            graph.setDirectedEdge(4, 3, 7);
+            graph.setDirectedEdge(0, 1, 4);
+            graph.setDirectedEdge(0, 2, 2);
+            graph.setDirectedEdge(1, 3, 3);
+            graph.setDirectedEdge(3, 5, 2);
+            graph.setDirectedEdge(3, 2, 1);
+            graph.setDirectedEdge(2, 4, 3);
+            graph.setDirectedEdge(2, 3, 2);
             graph.setDirectedEdge(4, 5, 4);
+
 
             int source = 0;
             int target = 5;

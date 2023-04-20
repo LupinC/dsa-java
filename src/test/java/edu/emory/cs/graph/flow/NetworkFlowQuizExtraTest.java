@@ -14,13 +14,14 @@ public class NetworkFlowQuizExtraTest {
 
 
         Graph graph = new Graph(6);
-        graph.setDirectedEdge(0, 1, 2);
-        graph.setDirectedEdge(0, 2, 1);
+        graph.setDirectedEdge(0, 1, 4);
+        graph.setDirectedEdge(0, 2, 2);
         graph.setDirectedEdge(1, 3, 3);
-        graph.setDirectedEdge(2, 3, 1);
-        graph.setDirectedEdge(2, 4, 4);
         graph.setDirectedEdge(3, 5, 2);
-        graph.setDirectedEdge(4, 5, 2);
+        graph.setDirectedEdge(3, 2, 1);
+        graph.setDirectedEdge(2, 4, 3);
+        graph.setDirectedEdge(2, 3, 2);
+        graph.setDirectedEdge(4, 5, 4);
 
         NetworkFlowQuizExtra maxFlow = new NetworkFlowQuizExtra();
         Set<Subgraph> augmentingPaths = maxFlow.getAugmentingPaths(graph, 0, 5);
