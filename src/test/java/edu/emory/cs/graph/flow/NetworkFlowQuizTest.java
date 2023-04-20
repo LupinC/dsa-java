@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NetworkFlowQuizTest {
 
-    public static void main(String[] args) {
+    @Test
+    public void test1() {
 
         Graph graph = new Graph(6);
         graph.setDirectedEdge(0, 1, 2);
@@ -26,8 +27,7 @@ public class NetworkFlowQuizTest {
         NetworkFlowQuiz maxFlow = new NetworkFlowQuiz();
         Set<Subgraph> augmentingPaths = maxFlow.getAugmentingPaths(graph, 0, 5);
         Set<String> actualPaths = new HashSet<>();
-        for(var s : augmentingPaths)
-        {
+        for (var s : augmentingPaths) {
             actualPaths.add(s.toString());
         }
 
@@ -74,11 +74,67 @@ public class NetworkFlowQuizTest {
         }
 
         assertEquals(expectedPaths2, expectedPaths);
-        for(Subgraph s: augmentingPaths)
-        System.out.println(s);
+        for (Subgraph s : augmentingPaths)
+            System.out.println(s);
 
 /*        for (Subgraph s: expectedPaths)
             System.out.println(s);*/
     }
 
-}
+
+        public static void main(String[] args) {
+            Graph graph = new Graph(6);
+            graph.setDirectedEdge(0, 1, 16);
+            graph.setDirectedEdge(0, 2, 13);
+            graph.setDirectedEdge(1, 2, 10);
+            graph.setDirectedEdge(2, 1, 4);
+            graph.setDirectedEdge(1, 3, 12);
+            graph.setDirectedEdge(2, 4, 14);
+            graph.setDirectedEdge(3, 2, 9);
+            graph.setDirectedEdge(3, 5, 20);
+            graph.setDirectedEdge(4, 3, 7);
+            graph.setDirectedEdge(4, 5, 4);
+
+            int source = 0;
+            int target = 5;
+
+            NetworkFlowQuiz a = new NetworkFlowQuiz();
+
+            assertEquals(5,5);
+
+            Set<Subgraph> augmentingPaths = new HashSet<>(a.getAugmentingPaths(graph, source, target));
+
+            System.out.println(augmentingPaths.size());
+
+            for (Subgraph path : augmentingPaths) {
+                System.out.println("Augmenting path:");
+                for (Edge edge : path.getEdges()) {
+                    System.out.println(edge.toString());
+                }
+            }
+
+            System.out.println("--------------------");
+
+            Graph graph2 = new Graph(6);
+            graph2.setDirectedEdge(0, 1, 2);
+            graph2.setDirectedEdge(0, 2, 1);
+            graph2.setDirectedEdge(1, 3, 3);
+            graph2.setDirectedEdge(2, 3, 1);
+            graph2.setDirectedEdge(2, 4, 4);
+            graph2.setDirectedEdge(3, 5, 2);
+            graph2.setDirectedEdge(4, 5, 2);
+
+            NetworkFlowQuiz maxFlow = new NetworkFlowQuiz();
+            Set<Subgraph> augmentingPath = maxFlow.getAugmentingPaths(graph2, 0, 5);
+
+            for (Subgraph path : augmentingPath) {
+                System.out.println("Augmenting path:");
+                for (Edge edge : path.getEdges()) {
+                    System.out.println(edge.toString());
+                }
+            }
+
+        }
+    }
+
+
