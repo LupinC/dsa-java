@@ -21,6 +21,7 @@ public class NetworkFlowQuizExtra {
         Set<Subgraph> augmentingPaths = new HashSet<>();
         Queue<Subgraph> queue = new LinkedList<>();
         Subgraph initialPath = new Subgraph();
+        MaxFlow mf = new MaxFlow(graph);
         initialPath.getVertices().add(source);
         queue.add(initialPath);
 
@@ -33,7 +34,7 @@ public class NetworkFlowQuizExtra {
             }
             for (Edge edge : graph.getOutgoingEdges().get(lastVertex)) {
                 int nextVertex = edge.getTarget();
-                if (!currentPath.contains(nextVertex)) {
+                if (!currentPath.contains(nextVertex)&&mf.getResidual(edge)>0) {
                     Subgraph newPath = new Subgraph(currentPath);
                     newPath.addEdge(edge);
                     queue.add(newPath);
