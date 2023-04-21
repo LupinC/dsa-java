@@ -19,53 +19,31 @@ public class NetworkFlowQuizExtra {
     public Set<Subgraph> getAugmentingPaths(Graph graph, int source, int target) {
         Set<Subgraph> augmentingPaths = new HashSet<>();
         Queue<Subgraph> queue = new LinkedList<>();
+        Queue<Integer> visited = new LinkedList<>();
         Subgraph initialPath = new Subgraph();
-        MaxFlow mf = new MaxFlow(graph);
-        initialPath.getVertices().add(source);
         queue.add(initialPath);
+        visited.add(source);
 
         while (!queue.isEmpty()) {
             Subgraph currentPath = queue.poll();
-            int lastVertex = currentPath.getVertices().stream().mapToInt(Integer::intValue).max().orElse(-1);
-            if (lastVertex == target) {
+            int src = visited.poll();
+            if (src == target) {
                 augmentingPaths.add(currentPath);
                 continue;
             }
-            for (Edge edge : graph.getOutgoingEdges().get(lastVertex)) {
-                int nextVertex = edge.getTarget();
-                if (!currentPath.contains(nextVertex)&&mf.getResidual(edge)>0) {
+            for (Edge edge : graph.getOutgoingEdges().get(src)) {
+                if (!currentPath.contains(edge.getTarget())) {
                     Subgraph newPath = new Subgraph(currentPath);
                     newPath.addEdge(edge);
+                    visited.add(edge.getTarget());
                     queue.add(newPath);
                 }
             }
         }
-        return RemoveDup(augmentingPaths);
+        return augmentingPaths;
     }
 
-    protected Set<Subgraph> RemoveDup(Set<Subgraph> aug)
-    {
-        Set<Subgraph> result = new HashSet<>();
-        HashSet<String> res2 = new HashSet<>();
-        for (Subgraph s: aug) {
-            List<Edge> allEdges = new ArrayList<>(s.getEdges());
-            for(int i = allEdges.size()-1; i>0; i--) {
-                if(allEdges.get(i).getSource()!=allEdges.get(i-1).getTarget())
-                    allEdges.remove(i-1);
-            }
-            Subgraph a = new Subgraph();
-            for(Edge e: allEdges) {
-                a.addEdge(e);
-            }
-            if(!res2.contains(a.toString())) {
-                res2.add(a.toString());
-                result.add(a);
-            }
-        }
-        return result;
-    }
-
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         Graph graph = new Graph(6);
         graph.setDirectedEdge(0, 1, 16);
         graph.setDirectedEdge(0, 2, 13);
@@ -94,5 +72,5 @@ public class NetworkFlowQuizExtra {
             }
         }
 
-    }
+    }*/
 }
