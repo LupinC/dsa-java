@@ -13,11 +13,14 @@ public class HanoiDynamic extends Hanoi {
     @Override
     public List<String> solve(int n, char source, char intermediate, char destination) {
         List<String> list = new ArrayList<>();
-        solve(list, n, source, intermediate, destination, new HashMap<>());
+        int[] count = {0};
+        solve(list, n, source, intermediate, destination, new HashMap<>(), count);
+        System.out.println(count[0]);
         return list;
     }
 
-    private void solve(List<String> list, int n, char source, char intermediate, char destination, Map<String, int[]> map) {
+    private void solve(List<String> list, int n, char source, char intermediate, char destination, Map<String, int[]> map, int[] count) {
+        count[0]++;
         if (n == 0) return;
         int fromIndex = list.size();
 
@@ -27,7 +30,7 @@ public class HanoiDynamic extends Hanoi {
         //If previous steps exist, add the steps to the step list
         if (sub != null) addAll(list, sub[0], sub[1]);
             //Move all plates from 'source' to 'intermediate' via 'destination' as medium
-        else solve(list, n - 1, source, destination, intermediate, map);
+        else solve(list, n - 1, source, destination, intermediate, map, count);
 
         //Record the step
         String key = getKey(n, source, destination);
@@ -39,7 +42,7 @@ public class HanoiDynamic extends Hanoi {
         //If previous steps exist, add the steps to the step list
         if (sub != null) addAll(list, sub[0], sub[1]);
             //Move all plates from 'intermediate' to 'destination' via 'source' as medium
-        else solve(list, n - 1, intermediate, source, destination, map);
+        else solve(list, n - 1, intermediate, source, destination, map, count);
 
         //If steps do not exist, add them to the dynamic list
         if (!map.containsKey(key))

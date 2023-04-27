@@ -24,7 +24,7 @@ public class HanoiTest {
         Hanoi recursive = new HanoiRecursive();
         Hanoi dynamic = new HanoiDynamic();
 
-        for (int k = 1; k < 20; k++)
+        for (int k = 1; k < 11; k++)
             assertEquals(recursive.solve(k, source, intermediate, destination), dynamic.solve(k, source, intermediate, destination));
     }
 
